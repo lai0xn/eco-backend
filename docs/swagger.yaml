@@ -1,0 +1,36 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact: {}
+  description: backend of the event management app.
+  title: Squid Tech API
+  version: "1.0"
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Login endpoint
+      tags:
+      - auth
+swagger: "2.0"

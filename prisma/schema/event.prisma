@@ -1,0 +1,13 @@
+model Event {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  description String
+  organizer  User @relation(fields: [organizerId], references: [id])
+  organizerId String @db.ObjectId
+  images Image[]
+    
+}
+
+type Image{
+  path String
+}

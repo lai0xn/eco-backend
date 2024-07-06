@@ -1,0 +1,13 @@
+model User {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String @unique
+  name    String
+  bio     String
+  image String
+  gender Boolean 
+  password String
+  is_organizer Boolean
+  events Event[]
+  createdAt DateTime @default(now())
+  
+}
