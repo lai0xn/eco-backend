@@ -1,0 +1,11 @@
+model Organization {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  image String
+  bg_image String
+  ownerId String @db.ObjectId
+  owner User @relation(fields:[ownerId],references:[id])
+  eventsIds String[]
+  events Event[]
+}

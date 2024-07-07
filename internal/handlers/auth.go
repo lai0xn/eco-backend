@@ -88,10 +88,10 @@ func(h *authHandler) Register(c echo.Context) error {
     e := err.(validator.ValidationErrors)
     return c.JSON(http.StatusBadRequest,utils.NewValidationError(e))
   }
-  if err := h.srv.CreateUser(payload.Name,payload.Email,payload.Password);err!=nil {
+  if err := h.srv.CreateUser(payload.Name,payload.Email,payload.Password,payload.Gender);err!=nil {
     return echo.NewHTTPError(http.StatusBadRequest,err)
   } 
-	return c.JSON(http.StatusOK, types.Response{
+	return c.JSON(http.StatusCreated, types.Response{
     "message":"user created successfully",
   })
 }

@@ -155,6 +155,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/profiles/profile/bg": {
+            "patch": {
+                "consumes": [
+                    "form/multipart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "profiles"
+                ],
+                "summary": "Change Profile Bg Image endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "file.png",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/profiles/profile/delete": {
             "delete": {
                 "consumes": [

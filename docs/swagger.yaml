@@ -96,6 +96,29 @@ paths:
       summary: Get Current Profile endpoint
       tags:
       - profiles
+  /profiles/profile/bg:
+    patch:
+      consumes:
+      - form/multipart
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: file.png
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Change Profile Bg Image endpoint
+      tags:
+      - profiles
   /profiles/profile/delete:
     delete:
       consumes:

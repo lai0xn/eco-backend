@@ -57,6 +57,8 @@ func (s *ProfileService)UpdateUser(id string,payload types.ProfileUpdate) (*db.U
     db.User.Email.Set(payload.Email),
     db.User.Name.Set(payload.Name),
     db.User.Bio.Set(payload.Bio),
+    db.User.Adress.Set(payload.Adress),
+    db.User.Phone.Set(payload.Phone),
   ).Exec(ctx)
   if err != nil {
     return nil,err 
@@ -72,6 +74,20 @@ func (s *ProfileService)UpdateUserImage(id string,path string) (string,error){
     db.User.ID.Equals(id),
   ).Update(
     db.User.Image.Set(path),
+  ).Exec(ctx)
+  if err != nil {
+    return "",err 
+  }
+  return user.Image,nil
+}
+
+func (s *ProfileService)UpdateUserBg(id string,path string) (string,error){
+  fmt.Println(id)
+  ctx := context.Background()
+  user,err := prisma.Client.User.FindUnique(
+    db.User.ID.Equals(id),
+  ).Update(
+    db.User.BgImg.Set(path),
   ).Exec(ctx)
   if err != nil {
     return "",err 

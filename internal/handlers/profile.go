@@ -106,6 +106,38 @@ func (h *profileHandler) ChangePfp(c echo.Context)error{
 }
 
 //
+//	@Summary	Change Profile Bg Image endpoint
+//	@Tags		profiles
+//	@Accept		form/multipart
+//	@Produce	json
+//	@Param		Authorization	header	string	true	"Bearer token"
+//	@Param		image	formData	file	true	"file.png"
+//	@Success	200
+//	@Router		/profiles/profile/bg [patch]
+func (h *profileHandler) ChangeBg(c echo.Context)error{
+  file, err := c.FormFile("image")
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*types.Claims)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+  path := fmt.Sprintf("public/uploads/bgs/%s",filepath.Clean(file.Filename))
+	f, err := os.Create(path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	src, err := file.Open()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	io.Copy(f, src)
+  _,err = h.srv.UpdateUserBg(claims.ID,path)
+	return c.JSON(http.StatusOK, types.Response{
+    "user":path,
+  })
+}
+
+//
 //	@Summary	Update Profile endpoint
 //	@Tags		profiles
 //	@Accept		json
@@ -124,10 +156,16 @@ func (h *profileHandler) Update(c echo.Context)error{
     if err != nil {
 		    return echo.NewHTTPError(http.StatusBadRequest, err.Error())
     }
+    adress,ok := u.Adress()
+    if !ok {
+    adress = ""
+    }
     var payload = types.ProfileUpdate{
         Email: claims.Email,
         Name: claims.Name,
         Bio: u.Bio,
+        Phone: u.Password,
+        Adress: adress,
     }
     err = c.Bind(&payload)
     if err != nil {

@@ -16,7 +16,7 @@ func NewAuthService()*AuthService{
   return &AuthService{}
 }
 
-func(s *AuthService)CreateUser(name string,email string,password string)error{
+func(s *AuthService)CreateUser(name string,email string,password string,gender bool)error{
   ctx := context.Background()
   client := db.NewClient()
   if err := client.Prisma.Connect();err!= nil {
@@ -31,8 +31,11 @@ func(s *AuthService)CreateUser(name string,email string,password string)error{
     db.User.Email.Set(email),
     db.User.Name.Set(name),
     db.User.Bio.Set(""),
-    db.User.Image.Set("uploads/default.jpg"),
+    db.User.Image.Set("uploads/profiles/default.jpg"),
+    db.User.Gender.Set(gender),
     db.User.Password.Set(encrypted_password),
+    db.User.BgImg.Set("uploads/bgs/default.jpg"),
+    
     ).Exec(ctx)
   if err != nil {
     return err

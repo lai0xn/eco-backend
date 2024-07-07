@@ -4,10 +4,18 @@ model User {
   name    String
   bio     String
   image String
-  gender Boolean?
+  gender Boolean 
   password String
-  is_organizer Boolean?
-  events Event[]
+  phone String?
+  bg_img String
+  Adress String?
+  events Event[] @relation(fields:[eventsIds],references:[id])
+  eventComments EventComment[]
+  postsComments PostComment[]
+  posts Post[]
+  applications EventApplication[]
+  Organizations Organization[]
+  eventsIds String[] @db.ObjectId
   createdAt DateTime @default(now())
   
 }
