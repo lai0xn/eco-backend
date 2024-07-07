@@ -69,14 +69,18 @@ func (h *oauthHandler) handleCallback(c echo.Context, provider string) error {
 		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
+
+		// we need to add some stuff here to match our user model
 	}
+
 	if err := json.NewDecoder(userInfo.Body).Decode(&user); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to decode user info: "+err.Error())
 	}
 
 	existingUser, err := h.srv.GetUserByEmail(user.Email)
+
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to check user existence: "+err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to check user existence")
 	}
 
 	if existingUser == nil {
@@ -144,7 +148,7 @@ func getUserInfoURL(provider string) string {
 	case "google":
 		return "https://www.googleapis.com/oauth2/v2/userinfo"
 	case "facebook":
-		return "https://graph.facebook.com/me?fields=id,name,email"
+		return "https://graph.facebook.com/v13.0/me?fields=id,name,email"
 	default:
 		return ""
 	}

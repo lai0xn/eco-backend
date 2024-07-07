@@ -65,3 +65,22 @@ func (s *AuthService) CheckUser(email string, password string) (*db.UserModel, e
 	return user, nil
 
 }
+
+func (s *AuthService) GetUserByEmail(email string) (*db.UserModel, error) {
+	ctx := context.Background()
+	client := db.NewClient()
+	if err := client.Prisma.Connect(); err != nil {
+		return nil, err
+	}
+
+	user, err := client.User.FindUnique(
+		db.User.Email.Equals(email),
+	).Exec(ctx)
+	if err != nil {
+		if errors.Is(err, db.ErrNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return user, nil
+}
