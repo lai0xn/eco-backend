@@ -4,7 +4,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/lai0xn/squid-tech/config"
+	"github.com/lai0xn/squid-tech/internal/middlewares"
 	"github.com/lai0xn/squid-tech/internal/router"
+	"github.com/lai0xn/squid-tech/pkg/utils"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -32,10 +34,15 @@ func (s *Server) Setup(e *echo.Echo) {
 
 	// Load Config
 	config.Load()
+
+	// Logger
+	utils.NewLogger()
+	e.Use(middlewares.LoggingMiddleware)
 }
 
 func (s *Server) Run() {
 	e := echo.New()
 	s.Setup(e)
-	e.Start(s.PORT)
+	utils.Logger.LogInfo().Msg(e.Start(s.PORT).Error())
+
 }
