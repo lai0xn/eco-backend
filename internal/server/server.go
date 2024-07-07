@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/lai0xn/squid-tech/config"
 	"github.com/lai0xn/squid-tech/internal/router"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
@@ -29,6 +30,8 @@ func (s *Server) Setup(e *echo.Echo) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
+	// Load Config
+	config.Load()
 }
 
 func (s *Server) Run() {

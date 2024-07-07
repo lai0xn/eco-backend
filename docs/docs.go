@@ -66,6 +66,42 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/oauth/google/callback": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Handles Google OAuth2 callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The OAuth2 authorization code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/oauth/google/login": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Initiates Google OAuth2 login",
+                "responses": {}
+            }
         }
     },
     "definitions": {
