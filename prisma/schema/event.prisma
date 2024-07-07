@@ -4,10 +4,7 @@ model Event {
   description String
   organizer  User @relation(fields: [organizerId], references: [id])
   organizerId String @db.ObjectId
-  images Image[]
-    
+  images String[] 
 }
 
-type Image{
-  path String
-}
+

@@ -3,6 +3,7 @@ package main
 import (
 	_ "github.com/lai0xn/squid-tech/docs"
 	"github.com/lai0xn/squid-tech/internal/server"
+	"github.com/lai0xn/squid-tech/prisma"
 )
 
 // @title			Squid Tech API
@@ -12,5 +13,6 @@ import (
 // @BasePath		/api/v1
 func main() {
 	s := server.NewServer(":8080")
+  prisma.Connect()
 	s.Run()
 }

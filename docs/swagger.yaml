@@ -6,7 +6,7 @@ info:
   title: Squid Tech API
   version: "1.0"
 paths:
-  /api/v1/auth/login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -31,6 +31,39 @@ paths:
           schema:
             type: string
       summary: Login endpoint
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: example@gmail.com
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      - description: aymen charfaoui
+        in: body
+        name: full_name
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Registration endpoint
       tags:
       - auth
 swagger: "2.0"

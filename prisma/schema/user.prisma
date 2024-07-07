@@ -4,9 +4,9 @@ model User {
   name    String
   bio     String
   image String
-  gender Boolean 
+  gender Boolean?
   password String
-  is_organizer Boolean
+  is_organizer Boolean?
   events Event[]
   createdAt DateTime @default(now())
   
