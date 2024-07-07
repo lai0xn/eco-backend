@@ -11,15 +11,15 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: email
+      - description: Email
         in: body
-        name: email
+        name: Email
         required: true
         schema:
           type: string
-      - description: password
+      - description: Password
         in: body
-        name: password
+        name: Pasword
         required: true
         schema:
           type: string
@@ -40,19 +40,19 @@ paths:
       parameters:
       - description: example@gmail.com
         in: body
-        name: email
+        name: Email
         required: true
         schema:
           type: string
       - description: password
         in: body
-        name: password
+        name: Password
         required: true
         schema:
           type: string
       - description: aymen charfaoui
         in: body
-        name: full_name
+        name: Name
         required: true
         schema:
           type: string

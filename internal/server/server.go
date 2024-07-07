@@ -2,8 +2,9 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/lai0xn/squid-tech/internal/router"
-	"github.com/swaggo/echo-swagger"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type Server struct {
@@ -19,6 +20,13 @@ func NewServer(port string) *Server {
 func (s *Server) Setup(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	router.SetRoutes(e)
+
+	// CORS configuration
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"}, // TODO: change this
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+	}))
 
 }
 

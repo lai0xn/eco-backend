@@ -29,8 +29,8 @@ const docTemplate = `{
                 "summary": "Login endpoint",
                 "parameters": [
                     {
-                        "description": "email",
-                        "name": "email",
+                        "description": "Email",
+                        "name": "Email",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -38,8 +38,8 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "description": "password",
-                        "name": "password",
+                        "description": "Password",
+                        "name": "Pasword",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -72,7 +72,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "example@gmail.com",
-                        "name": "email",
+                        "name": "Email",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -81,7 +81,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "password",
-                        "name": "password",
+                        "name": "Password",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -90,7 +90,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "aymen charfaoui",
-                        "name": "full_name",
+                        "name": "Name",
                         "in": "body",
                         "required": true,
                         "schema": {

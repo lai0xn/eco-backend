@@ -13,6 +13,6 @@ import (
 // @BasePath		/api/v1
 func main() {
 	s := server.NewServer(":8080")
-  prisma.Connect()
+	prisma.Connect()
 	s.Run()
 }
