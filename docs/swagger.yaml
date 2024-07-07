@@ -64,4 +64,28 @@ paths:
       summary: Registration endpoint
       tags:
       - auth
+  /oauth/google/callback:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: The OAuth2 authorization code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Handles Google OAuth2 callback
+      tags:
+      - auth
+  /oauth/google/login:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: Initiates Google OAuth2 login
+      tags:
+      - auth
 swagger: "2.0"

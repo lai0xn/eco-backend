@@ -2,12 +2,9 @@ package handlers
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/lai0xn/squid-tech/config"
 	"github.com/lai0xn/squid-tech/internal/services"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"github.com/lai0xn/squid-tech/pkg/utils"
@@ -31,8 +28,7 @@ func NewAuthHandler() *authHandler {
 //	@Produce	json
 //	@Param		body		body		types.LoginPayload	true	"Login details"
 //	@Router		/auth/login [post]
-func (s *authHandler) Login(c echo.Context) error {
-
+func (h *authHandler) Login(c echo.Context) error {
 	var payload types.LoginPayload
 	if err := c.Bind(&payload); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -42,23 +38,17 @@ func (s *authHandler) Login(c echo.Context) error {
 		e := err.(validator.ValidationErrors)
 		return c.JSON(http.StatusBadRequest, utils.NewValidationError(e))
 	}
-	user, err := s.srv.CheckUser(payload.Email, payload.Password)
+	user, err := h.srv.CheckUser(payload.Email, payload.Password)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &types.Claims{
-		user.Name,
-		user.Email,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
-		},
-	})
-	token_string, err := token.SignedString([]byte(config.JWT_SECRET))
+	// Generate JWT token using the utility function
+	tokenString, err := utils.GenerateJWT(user.Email, user.Name)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, types.Response{
-		"token": token_string,
+		"token": tokenString,
 	})
 }
 
@@ -70,7 +60,7 @@ func (s *authHandler) Login(c echo.Context) error {
 //	@Produce	json
 //	@Param		body		body		types.RegisterPayload	true	"Registration details"
 //	@Router		/auth/register [post]
-func (s *authHandler) Register(c echo.Context) error {
+func (h *authHandler) Register(c echo.Context) error {
 	var payload types.RegisterPayload
 	if err := c.Bind(&payload); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -80,7 +70,7 @@ func (s *authHandler) Register(c echo.Context) error {
 		e := err.(validator.ValidationErrors)
 		return c.JSON(http.StatusBadRequest, utils.NewValidationError(e))
 	}
-	if err := s.srv.CreateUser(payload.Name, payload.Email, payload.Password); err != nil {
+	if err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 	return c.JSON(http.StatusOK, types.Response{

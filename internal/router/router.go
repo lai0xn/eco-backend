@@ -10,7 +10,7 @@ func SetRoutes(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Server Working")
 	})
-  v1 := e.Group("/api/v1")
-  AuthRoutes(v1)
-
+	v1 := e.Group("/api/v1")
+	AuthRoutes(v1)
+	OAuthRoutes(v1)
 }
