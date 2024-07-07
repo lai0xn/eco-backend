@@ -1,4 +1,28 @@
 basePath: /api/v1
+definitions:
+  types.LoginPayload:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  types.RegisterPayload:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -11,25 +35,15 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Email
+      - description: Login details
         in: body
-        name: Email
+        name: body
         required: true
         schema:
-          type: string
-      - description: Password
-        in: body
-        name: Pasword
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/types.LoginPayload'
       produces:
       - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
+      responses: {}
       summary: Login endpoint
       tags:
       - auth
@@ -38,31 +52,15 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: example@gmail.com
+      - description: Registration details
         in: body
-        name: Email
+        name: body
         required: true
         schema:
-          type: string
-      - description: password
-        in: body
-        name: Password
-        required: true
-        schema:
-          type: string
-      - description: aymen charfaoui
-        in: body
-        name: Name
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/types.RegisterPayload'
       produces:
       - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
+      responses: {}
       summary: Registration endpoint
       tags:
       - auth

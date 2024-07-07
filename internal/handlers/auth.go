@@ -29,9 +29,7 @@ func NewAuthHandler() *authHandler {
 //	@Tags		auth
 //	@Accept		json
 //	@Produce	json
-//	@Param		Email		body		string	true	"Email"
-//	@Param		Pasword	body		string	true	"Password"
-//	@Success	200			{object}	string
+//	@Param		body		body		types.LoginPayload	true	"Login details"
 //	@Router		/auth/login [post]
 func (s *authHandler) Login(c echo.Context) error {
 
@@ -70,10 +68,7 @@ func (s *authHandler) Login(c echo.Context) error {
 //	@Tags		auth
 //	@Accept		json
 //	@Produce	json
-//	@Param		Email		body		string	true	"example@gmail.com"
-//	@Param		Password	body		string	true	"password"
-//	@Param		Name	body		string	true	"aymen charfaoui"
-//	@Success	200			{object}	string
+//	@Param		body		body		types.RegisterPayload	true	"Registration details"
 //	@Router		/auth/register [post]
 func (s *authHandler) Register(c echo.Context) error {
 	var payload types.RegisterPayload
