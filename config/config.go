@@ -1,17 +1,17 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/lai0xn/squid-tech/pkg/types"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/facebook"
 	"golang.org/x/oauth2/google"
 )
 
 var JWT_SECRET string
-var OAuth2Config *oauth2.Config
 
 func Load() {
 	if err := godotenv.Load(); err != nil {
@@ -19,23 +19,27 @@ func Load() {
 	}
 
 	// OAuth configuration
-	clientID := os.Getenv("GOOGLE_CLIENT_ID")
-	clientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
-	redirectURL := os.Getenv("REDIRECT_URL")
-
-	OAuth2Config = &oauth2.Config{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		RedirectURL:  redirectURL,
-		Scopes:       []string{"profile", "email"},
-		Endpoint:     google.Endpoint,
+	types.OAuth2Configs = map[string]*types.OAuthProvider{
+		"google": {
+			Config: &oauth2.Config{
+				ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
+				ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
+				RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URL"),
+				Scopes:       []string{"profile", "email"},
+				Endpoint:     google.Endpoint,
+			},
+		},
+		"facebook": {
+			Config: &oauth2.Config{
+				ClientID:     os.Getenv("FACEBOOK_CLIENT_ID"),
+				ClientSecret: os.Getenv("FACEBOOK_CLIENT_SECRET"),
+				RedirectURL:  os.Getenv("FACEBOOK_REDIRECT_URL"),
+				Scopes:       []string{"public_profile", "email"},
+				Endpoint:     facebook.Endpoint,
+			},
+		},
 	}
 
 	// JWT Secret
 	JWT_SECRET = os.Getenv("JWT_SECRET")
-
-	fmt.Printf("GOOGLE_CLIENT_ID: %s\n", clientID)
-	fmt.Printf("GOOGLE_CLIENT_SECRET: %s\n", clientSecret)
-	fmt.Printf("REDIRECT_URL: %s\n", redirectURL)
-	fmt.Printf("JWT_SECRET: %s\n", JWT_SECRET)
 }

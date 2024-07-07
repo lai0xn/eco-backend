@@ -10,4 +10,6 @@ func OAuthRoutes(e *echo.Group) {
 	oauth := e.Group("/oauth")
 	oauth.GET("/google", h.GoogleLogin)
 	oauth.GET("/google/callback", h.GoogleCallback)
+	oauth.GET("/facebook", h.FacebookLogin)
+	oauth.GET("/facebook/callback", h.FacebookCallback)
 }
