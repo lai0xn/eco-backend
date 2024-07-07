@@ -33,7 +33,7 @@ func NewAuthHandler()*authHandler{
 //	@Param		password	body		string	true	"password"
 //	@Success	200			{object}	string
 //	@Router		/auth/login [post]
-func(s *authHandler) Login(c echo.Context) error {
+func(h *authHandler) Login(c echo.Context) error {
   
 	 var payload types.LoginPayload
   if err := c.Bind(&payload);err!= nil {
@@ -44,11 +44,12 @@ func(s *authHandler) Login(c echo.Context) error {
     e := err.(validator.ValidationErrors)
     return c.JSON(http.StatusBadRequest,utils.NewValidationError(e))
   }
-  user,err := s.srv.CheckUser(payload.Email,payload.Password)
+  user,err := h.srv.CheckUser(payload.Email,payload.Password)
   if err!=nil {
     return echo.NewHTTPError(http.StatusBadRequest,err)
   } 
   token := jwt.NewWithClaims(jwt.SigningMethodHS256,&types.Claims{
+    user.ID,
     user.Name,
     user.Email,
     jwt.RegisteredClaims{
@@ -77,7 +78,7 @@ func(s *authHandler) Login(c echo.Context) error {
 //	@Param		full_name	body		string	true	"aymen charfaoui"
 //	@Success	200			{object}	string
 //	@Router		/auth/register [post]
-func(s *authHandler) Register(c echo.Context) error {
+func(h *authHandler) Register(c echo.Context) error {
   var payload types.RegisterPayload
   if err := c.Bind(&payload);err!= nil {
     return echo.NewHTTPError(http.StatusBadRequest,err.Error())
@@ -87,7 +88,7 @@ func(s *authHandler) Register(c echo.Context) error {
     e := err.(validator.ValidationErrors)
     return c.JSON(http.StatusBadRequest,utils.NewValidationError(e))
   }
-  if err := s.srv.CreateUser(payload.Name,payload.Email,payload.Password);err!=nil {
+  if err := h.srv.CreateUser(payload.Name,payload.Email,payload.Password);err!=nil {
     return echo.NewHTTPError(http.StatusBadRequest,err)
   } 
 	return c.JSON(http.StatusOK, types.Response{

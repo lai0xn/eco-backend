@@ -18,6 +18,7 @@ func NewServer(port string) *Server {
 
 func (s *Server) Setup(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+  e.Static("/public","public")
 	router.SetRoutes(e)
 
 }
