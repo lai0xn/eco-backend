@@ -15,10 +15,6 @@ var (
 )
 
 func init() {
-	//Load config
-
-	config.Load()
-
 	//Initialize the middlware
 	jwtMiddelware = echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte(config.JWT_SECRET),
