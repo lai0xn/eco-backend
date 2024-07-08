@@ -84,7 +84,7 @@ func (h *oauthHandler) handleCallback(c echo.Context, provider string) error {
 	}
 
 	if existingUser == nil {
-		if err := h.srv.CreateUser(user.Name, user.Email, ""); err != nil {
+		if err := h.srv.CreateUser(user.Name, user.Email, "", false); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "failed to create user: "+err.Error())
 		}
 	}
