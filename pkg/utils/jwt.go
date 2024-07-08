@@ -23,3 +23,16 @@ func GenerateJWT(id string, email string, name string) (string, error) {
 	}
 	return tokenString, nil
 }
+
+func ParseToken(tokenString string) (*jwt.Token, error) {
+	claims := new(types.Claims)
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+
+		return []byte(config.JWT_SECRET), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return token, nil
+}

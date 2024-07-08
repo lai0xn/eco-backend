@@ -54,7 +54,10 @@ func (s *EventsService) SearchEvent(name string) ([]db.EventModel, error) {
 		"params": name,
 	}).Msg("DB Query")
 	result, err := prisma.Client.Event.FindMany(
-		db.Event.Title.Contains(name),
+		db.Event.Or(
+        db.Event.Title.Contains(name),
+        db.Event.Description.Contains(name),
+    ),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/graphql-go/handler"
+	"github.com/lai0xn/squid-tech/internal/middlewares"
 )
 
 func Execute() {
@@ -14,7 +15,8 @@ func Execute() {
 		Playground: true,
 	})
 	s := http.NewServeMux()
-  s.Handle("/graphql",h)
+  
+  s.Handle("/graphql",middlewares.HeaderMiddleware(h))
 	http.ListenAndServe(":5000", s)
 
 }
