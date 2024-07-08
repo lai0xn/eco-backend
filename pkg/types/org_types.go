@@ -1,6 +1,6 @@
 package types
 
 type OrgPayload struct {
-	Name        string
-	Description string
+  Name        string `json:"name"`
+  Description string `json:"description"`
 }

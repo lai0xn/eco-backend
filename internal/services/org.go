@@ -74,9 +74,7 @@ func (s *OrgService) UpdateOrg(id string, payload types.OrgPayload) (*db.Organiz
 	).Update(
 		db.Organization.Name.Set(payload.Name),
 		db.Organization.Description.Set(payload.Description),
-		db.Organization.Image.Set("uplodas/profiles/default.jpg"),
-		db.Organization.Image.Set("uplodas/bgs/default.jpg"),
-	).Exec(ctx)
+			).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
