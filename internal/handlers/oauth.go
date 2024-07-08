@@ -69,26 +69,26 @@ func (h *oauthHandler) handleCallback(c echo.Context, provider string) error {
 		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
-
-		// we need to add some stuff here to match our user model
 	}
 
 	if err := json.NewDecoder(userInfo.Body).Decode(&user); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to decode user info: "+err.Error())
 	}
 
+	// Check if the user exists
 	existingUser, err := h.srv.GetUserByEmail(user.Email)
-
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to check user existence")
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to sqdfqsdfqsdf user existence")
 	}
 
+	// If user doesn't exist, create a new user
 	if existingUser == nil {
 		if err := h.srv.CreateUser(user.Name, user.Email, "", false); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "failed to create user: "+err.Error())
 		}
 	}
 
+	// Generate JWT token
 	tokenString, err := utils.GenerateJWT(user.Email, user.Name)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to generate token: "+err.Error())

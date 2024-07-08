@@ -78,9 +78,10 @@ func (s *AuthService) GetUserByEmail(email string) (*db.UserModel, error) {
 	).Exec(ctx)
 	if err != nil {
 		if errors.Is(err, db.ErrNotFound) {
-			return nil, nil
+			return nil, nil // User not found
 		}
-		return nil, err
+		return nil, err // Other errors
 	}
-	return user, nil
+
+	return user, nil // User found
 }
