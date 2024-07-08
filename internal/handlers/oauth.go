@@ -89,7 +89,7 @@ func (h *oauthHandler) handleCallback(c echo.Context, provider string) error {
 	}
 
 	// Generate JWT token
-	tokenString, err := utils.GenerateJWT(user.Email, user.Name)
+	tokenString, err := utils.GenerateJWT(user.ID, user.Email, user.Name)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to generate token: "+err.Error())
 	}

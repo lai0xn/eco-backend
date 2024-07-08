@@ -6,17 +6,15 @@ import (
 )
 
 func profileRoutes(e *echo.Group) {
-  p := e.Group("/profiles")
-  h := handlers.NewProfileHandler()
-  p.Use(jwtMiddelware)
-  p.GET("/get/:id",h.Get)
-  p.GET("/profile",h.CurrentUser)
-  p.GET("/search",h.Search)
-  p.PATCH("/profile/pfp",h.ChangePfp)
-  p.PATCH("/profile/bg",h.ChangeBg)
-  p.PATCH("/profile/update",h.Update)
-  p.DELETE("/profile/delete",h.Delete)
-
-
+	p := e.Group("/profiles")
+	h := handlers.NewProfileHandler()
+	p.Use(jwtMiddelware)
+	p.GET("/get/:id", h.Get)
+	p.GET("/profile", h.CurrentUser)
+	p.GET("/search", h.Search)
+	p.PATCH("/profile/pfp", h.ChangePfp)
+	p.PATCH("/profile/bg", h.ChangeBg)
+	p.PATCH("/profile/update", h.Update)
+	p.DELETE("/profile/delete", h.Delete)
 
 }

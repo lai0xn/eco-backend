@@ -8,8 +8,9 @@ import (
 	"github.com/lai0xn/squid-tech/pkg/types"
 )
 
-func GenerateJWT(email, name string) (string, error) {
+func GenerateJWT(id string, email string, name string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &types.Claims{
+		ID:    id,
 		Name:  name,
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{

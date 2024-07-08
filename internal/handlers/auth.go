@@ -43,7 +43,7 @@ func (h *authHandler) Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 	// Generate JWT token using the utility function
-	tokenString, err := utils.GenerateJWT(user.Email, user.Name)
+	tokenString, err := utils.GenerateJWT(user.ID, user.Email, user.Name)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

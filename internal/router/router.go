@@ -11,13 +11,23 @@ import (
 )
 
 var (
+	jwtMiddelware echo.MiddlewareFunc
+)
+
+func init() {
+	//Load config
+
+	config.Load()
+
+	//Initialize the middlware
 	jwtMiddelware = echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte(config.JWT_SECRET),
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(types.Claims)
 		},
 	})
-)
+
+}
 
 func SetRoutes(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
@@ -26,5 +36,6 @@ func SetRoutes(e *echo.Echo) {
 	v1 := e.Group("/api/v1")
 	AuthRoutes(v1)
 	profileRoutes(v1)
+	orgsRoutes(v1)
 	OAuthRoutes(v1)
 }

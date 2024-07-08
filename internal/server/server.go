@@ -21,8 +21,10 @@ func NewServer(port string) *Server {
 }
 
 func (s *Server) Setup(e *echo.Echo) {
+	// Load Config
+	config.Load()
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-  e.Static("/public","public")
+	e.Static("/public", "public")
 	router.SetRoutes(e)
 
 	// CORS configuration
@@ -31,9 +33,6 @@ func (s *Server) Setup(e *echo.Echo) {
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
-
-	// Load Config
-	config.Load()
 
 	// Logger
 	utils.NewLogger()

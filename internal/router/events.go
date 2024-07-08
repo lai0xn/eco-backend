@@ -6,11 +6,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func eventRoutes(e echo.Group){
-  events := e.Group("/events")
-  events.Use(jwtMiddelware)
-  events.GET("/",func(c echo.Context) error {
-    return c.String(http.StatusOK,"Authorized")
-  })
+func eventRoutes(e echo.Group) {
+	events := e.Group("/events")
+	events.Use(jwtMiddelware)
+	events.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Authorized")
+	})
 
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/lai0xn/squid-tech/config"
 	_ "github.com/lai0xn/squid-tech/docs"
 	"github.com/lai0xn/squid-tech/internal/server"
 	"github.com/lai0xn/squid-tech/prisma"
@@ -12,6 +13,7 @@ import (
 // @host			localhost:8080
 // @BasePath		/api/v1
 func main() {
+	config.Load()
 	s := server.NewServer(":8080")
 	prisma.Connect()
 	s.Run()
