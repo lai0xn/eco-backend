@@ -5,3 +5,9 @@ services:
     plan: free
     envVars:
       - fromGroup: squid-tech-settings
+
+  - type: redis
+    name: lightning
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere

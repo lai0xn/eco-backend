@@ -12,7 +12,6 @@ import (
 var JWT_SECRET string
 
 func Load() {
-
 	// OAuth configuration
 	types.OAuth2Configs = map[string]*types.OAuthProvider{
 		"google": {
