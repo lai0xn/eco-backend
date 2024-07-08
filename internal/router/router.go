@@ -16,7 +16,6 @@ var (
 
 func init() {
 	//Load config
-
 	config.Load()
 
 	//Initialize the middlware

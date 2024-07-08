@@ -1,0 +1,31 @@
+databases:
+  - name: squid-tech-db
+    databaseName: db
+    user: isifoo
+
+services:
+  - type: web
+    name: squid-tech-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    buildCommand: docker build -t squid-tech-backend .
+    startCommand: docker run -p 8080:8080 squid-tech-backend
+    envVars:
+      - key: MONGO_URI
+        fromDatabase:
+          name: db
+          property: connectionString
+      - fromGroup: squid-tech-settings
+
+envVarGroups:
+  - name: squid-tech-settings
+    envVars:
+      - key: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_SECRET
+      - key: GOOGLE_REDIRECT_URL
+      - key: FACEBOOK_CLIENT_ID
+      - key: FACEBOOK_CLIENT_SECRET
+      - key: FACEBOOK_REDIRECT_URL
+      - key: JWT_SECRET
+      - key: MONGO_URI
