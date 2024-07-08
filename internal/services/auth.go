@@ -54,13 +54,13 @@ func (s *AuthService) CheckUser(email string, password string) (*db.UserModel, e
 		db.User.Email.Equals(email),
 	).Exec(ctx)
 	if err != nil {
-		return nil, errors.New("Wrong Credentials")
+		return nil, errors.New("wrong credentials")
 	}
 	fmt.Println(user.Email)
 	enc_pass := user.Password
 	err = utils.CheckPassword(enc_pass, password)
 	if err != nil {
-		return nil, errors.New("Wrong Credetials")
+		return nil, errors.New("wrong credentials")
 	}
 	return user, nil
 

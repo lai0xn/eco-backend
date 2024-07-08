@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
-	"github.com/lai0xn/squid-tech/pkg/utils"
 	"github.com/lai0xn/squid-tech/prisma"
 	"github.com/lai0xn/squid-tech/prisma/db"
 )
@@ -17,7 +17,7 @@ func NewProfileService() *ProfileService {
 }
 
 func (s *ProfileService) GetUser(id string) (*db.UserModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get profile",
 		"params": id,
 	}).Msg("DB Query")
@@ -32,7 +32,7 @@ func (s *ProfileService) GetUser(id string) (*db.UserModel, error) {
 }
 
 func (s *ProfileService) GetUserByEmail(email string) (*db.UserModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "search profile",
 		"params": email,
 	}).Msg("DB Query")
@@ -48,7 +48,7 @@ func (s *ProfileService) GetUserByEmail(email string) (*db.UserModel, error) {
 }
 
 func (s *ProfileService) SearchByName(name string) ([]db.UserModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "search profile",
 		"params": name,
 	}).Msg("DB Query")
@@ -64,7 +64,7 @@ func (s *ProfileService) SearchByName(name string) ([]db.UserModel, error) {
 }
 
 func (s *ProfileService) UpdateUser(id string, payload types.ProfileUpdate) (*db.UserModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "update profile",
 		"id":     id,
 		"params": payload,
@@ -115,7 +115,7 @@ func (s *ProfileService) UpdateUserBg(id string, path string) (string, error) {
 }
 
 func (s *ProfileService) DeleteUser(id string) (string, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "delete profile",
 		"params": id,
 	}).Msg("DB Query")

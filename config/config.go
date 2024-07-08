@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/facebook"
@@ -36,4 +37,7 @@ func Load() {
 
 	// JWT Secret
 	JWT_SECRET = os.Getenv("JWT_SECRET")
+
+	// Initialize the logger
+	logger.NewLogger()
 }
