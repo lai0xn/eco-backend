@@ -5,15 +5,3 @@ services:
     plan: free
     envVars:
       - fromGroup: squid-tech-settings
-
-envVarGroups:
-  - name: squid-tech-settings
-    envVars:
-      - key: GOOGLE_CLIENT_ID
-      - key: GOOGLE_CLIENT_SECRET
-      - key: GOOGLE_REDIRECT_URL
-      - key: FACEBOOK_CLIENT_ID
-      - key: FACEBOOK_CLIENT_SECRET
-      - key: FACEBOOK_REDIRECT_URL
-      - key: JWT_SECRET
-      - key: MONGO_URI
