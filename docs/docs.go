@@ -67,6 +67,42 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/oauth/facebook/callback": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Handles Facebook OAuth2 callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The OAuth2 authorization code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/oauth/facebook/login": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Initiates Facebook OAuth2 login",
+                "responses": {}
+            }
+        },
         "/oauth/google/callback": {
             "get": {
                 "consumes": [
@@ -101,42 +137,6 @@ const docTemplate = `{
                 ],
                 "summary": "Initiates Google OAuth2 login",
                 "responses": {}
-            }
-        }
-    },
-    "definitions": {
-        "types.LoginPayload": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.RegisterPayload": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
             }
         },
         "/profiles/get/:id": {
@@ -369,6 +369,46 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "types.LoginPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.RegisterPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "gender",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         }

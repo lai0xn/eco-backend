@@ -1,6 +1,8 @@
 module github.com/lai0xn/squid-tech
 
-go 1.22.3
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0

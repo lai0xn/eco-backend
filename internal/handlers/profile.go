@@ -136,9 +136,7 @@ func (h *profileHandler) ChangeBg(c echo.Context) error {
 // @Accept		json
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
-// @Param		name	body	string	false	"jhon doe"
-// @Param		email	body	string	false	"example@gmail.com"
-// @Param		bio	body	string	false	"im a dev"
+// @Param		body	body	types.ProfileUpdate	false	"jhon doe"
 // @Success	200
 // @Router		/profiles/profile/update [patch]
 func (h *profileHandler) Update(c echo.Context) error {
