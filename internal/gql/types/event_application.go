@@ -6,14 +6,14 @@ import "github.com/graphql-go/graphql"
 var ApplicationType = graphql.NewObject(graphql.ObjectConfig{
   Name:"Application",
   Fields: graphql.Fields{
-    "ID" : &graphql.Field{
+    "id" : &graphql.Field{
       Type: graphql.String,
     },
     "eventID":&graphql.Field{
       Type: graphql.String,
     },
-    "content":&graphql.Field{
-      Type: graphql.String,
+    "event":&graphql.Field{
+      Type: EventType,
     },
     "userId":&graphql.Field{
       Type: graphql.String,

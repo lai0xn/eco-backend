@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 
 	"github.com/lai0xn/squid-tech/pkg/utils"
 	"github.com/lai0xn/squid-tech/prisma"
@@ -15,7 +16,7 @@ func NewAppService() *AppService {
 }
 
 
-func (s *EventsService) GetApp(id string) (*db.EventApplicationModel, error) {
+func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get app",
@@ -31,7 +32,24 @@ func (s *EventsService) GetApp(id string) (*db.EventApplicationModel, error) {
 	return result, nil
 }
 
-func (s *EventsService) GetEventApps(id string) ([]db.EventApplicationModel, error) {
+
+func (s *AppService) DeleteApp(id string) (*db.EventApplicationModel, error) {
+	ctx := context.Background()
+	utils.Logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "get app",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.EventApplication.FindUnique(
+		db.EventApplication.ID.Equals(id),
+	).Delete().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (s *AppService) GetEventApps(id string) ([]db.EventApplicationModel, error) {
 	ctx := context.Background()
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get event apps",
@@ -46,7 +64,7 @@ func (s *EventsService) GetEventApps(id string) ([]db.EventApplicationModel, err
 	return result, nil
 }
 
-func (s *EventsService) CreateApp(eventId string,userId string,content string,extra string) (*db.EventApplicationModel, error) {
+func (s *AppService) CreateApp(eventId string,userId string,content string,extra string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "create event app",
@@ -55,11 +73,12 @@ func (s *EventsService) CreateApp(eventId string,userId string,content string,ex
 		db.EventApplication.Event.Link(db.Event.ID.Equals(eventId)),
     db.EventApplication.User.Link(db.User.ID.Equals(userId)),
     db.EventApplication.Motivation.Set(content),
-    db.EventApplication.Accepted.Equals(false),
+    db.EventApplication.Accepted.Set(false),
     db.EventApplication.Extra.Set(extra),  
 
 	).Exec(ctx)
 	if err != nil {
+    log.Println(err.Error())
 		return nil, err
 	}
 	return result, nil
