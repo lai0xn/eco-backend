@@ -6,7 +6,7 @@ model Post {
   authorId String @db.ObjectId
   createdAt DateTime @default(now())
   comments PostComment[]
-  images String
+  image String?
  }
 
  model PostComment {
