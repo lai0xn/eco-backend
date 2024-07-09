@@ -67,6 +67,41 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/events/event/:id/upload": {
+            "post": {
+                "consumes": [
+                    "form/multipart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Add Event Image endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "file.png",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/oauth/facebook/callback": {
             "get": {
                 "consumes": [

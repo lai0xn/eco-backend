@@ -87,6 +87,29 @@ paths:
       summary: Registration endpoint
       tags:
       - auth
+  /events/event/:id/upload:
+    post:
+      consumes:
+      - form/multipart
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: file.png
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Add Event Image endpoint
+      tags:
+      - events
   /oauth/facebook/callback:
     get:
       consumes:

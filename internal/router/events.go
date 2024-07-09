@@ -1,16 +1,15 @@
 package router
 
 import (
-	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/lai0xn/squid-tech/internal/handlers"
 )
 
-func eventRoutes(e echo.Group) {
+func eventRoutes(e *echo.Group) {
 	events := e.Group("/events")
+  h:= handlers.NewEventHandler()
 	events.Use(jwtMiddelware)
-	events.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Authorized")
-	})
+	events.POST("/event/:id/upload",h.AddImage)
 
 }

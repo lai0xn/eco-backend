@@ -3,7 +3,6 @@ package server
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/lai0xn/squid-tech/config"
 	"github.com/lai0xn/squid-tech/internal/gql"
 	"github.com/lai0xn/squid-tech/internal/middlewares/rest"
 	"github.com/lai0xn/squid-tech/internal/router"
@@ -22,8 +21,6 @@ func NewServer(port string) *Server {
 }
 
 func (s *Server) Setup(e *echo.Echo) {
-	// Load Config
-	config.Load()
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.Static("/public", "public")
