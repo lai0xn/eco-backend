@@ -18,6 +18,9 @@ var ApplicationType = graphql.NewObject(graphql.ObjectConfig{
     "userId":&graphql.Field{
       Type: graphql.String,
     },
+    "user":&graphql.Field{
+      Type:UserType,
+    },
     "motivation":&graphql.Field{
       Type: graphql.String,
     },

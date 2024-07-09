@@ -25,7 +25,7 @@ func (s *EventsService) GetEvent(id string) (*db.EventModel, error) {
 
 	result, err := prisma.Client.Event.FindUnique(
 		db.Event.ID.Equals(id),
-	).With(db.Event.Organizer.Fetch()).Exec(ctx)
+	).With(db.Event.Organizer.Fetch(),db.Event.Particapnts.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}

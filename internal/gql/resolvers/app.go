@@ -7,6 +7,8 @@ import (
 	"github.com/lai0xn/squid-tech/internal/middlewares/gql"
 	"github.com/lai0xn/squid-tech/internal/services"
 	"github.com/lai0xn/squid-tech/pkg/types"
+   t"github.com/lai0xn/squid-tech/internal/gql/types"
+
 )
 
 func NewAppResolver() *appResolver{
@@ -85,6 +87,12 @@ func (r *appResolver)App(p graphql.ResolveParams) (interface{},error){
     "eventID":a.EventID,
     "motivation":a.Motivation,
     "userId":a.UserID,
+    "user":t.User{
+      ID:a.UserID,
+      Email: a.User().Email,
+      Name: a.User().Name,
+      Image:a.User().Image,
+    },
     "accepted":a.Accepted,
     "event":map[string]interface{}{
       "title":event.Title,

@@ -73,8 +73,6 @@ func (r *eventResolver)Event(p graphql.ResolveParams) (interface{},error){
     return nil,err
   }
   event := t.EventFromModel(e)
-
-  fmt.Println(event)
   return event,nil
 }
 

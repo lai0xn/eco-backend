@@ -27,6 +27,7 @@ func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 		db.EventApplication.ID.Equals(id),
 	).With(
     db.EventApplication.Event.Fetch(),
+    db.EventApplication.User.Fetch(),
     ).Exec(ctx)
 
 	if err != nil {
