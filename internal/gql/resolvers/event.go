@@ -7,6 +7,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	t "github.com/lai0xn/squid-tech/internal/gql/types"
+	"github.com/lai0xn/squid-tech/internal/middlewares/gql"
 	"github.com/lai0xn/squid-tech/internal/services"
 	"github.com/lai0xn/squid-tech/pkg/types"
 )
@@ -134,16 +135,15 @@ func (r *eventResolver)DeleteEvent(p graphql.ResolveParams) (interface{},error){
 
 func (r *eventResolver)JoinEvent(p graphql.ResolveParams) (interface{},error){
  
-  u := p.Context.Value("user")
-  if u == nil {
-    return "",errors.New("Unothorized")
+  userId,err := middlewares.IsAuthenticated(p) 
+  if err != nil {
+    return nil,err
   }
-  user := u.(*types.Claims)
   eventId,ok := p.Args["id"].(string)
   if !ok {
     return "" ,errors.New("No Args Provided")
   }
-  e,err := r.srv.JoinEvent(eventId,user.ID)
+  e,err := r.srv.JoinEvent(eventId,userId)
   if err != nil {
     return nil,err
   }

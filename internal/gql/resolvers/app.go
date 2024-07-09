@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/graphql-go/graphql"
+	"github.com/lai0xn/squid-tech/internal/middlewares/gql"
 	"github.com/lai0xn/squid-tech/internal/services"
 	"github.com/lai0xn/squid-tech/pkg/types"
 )
@@ -27,22 +28,6 @@ func(r *appResolver) hasPerm(p graphql.ResolveParams)error{
     return errors.New("Not Authorized")
    }
    user := u.(*types.Claims)
-   app,err := r.srv.GetApp(id) 
-   if err != nil {
-    return err
-   }
-   if app.UserID != user.ID  && app.Event().OrganizerID != user.ID{
-    return errors.New("Not Authorized")
-   }
-   return nil 
-}
-func(r *appResolver) isOrganizer(p graphql.ResolveParams)error{
-   id := p.Args["id"].(string)
-   u := p.Context.Value("user")
-   if u == nil {
-    return errors.New("Not Authorized")
-   }
-   user := u.(*types.Claims)
    app,err := r.srv.GetApp(id)
    if err != nil {
     return err
@@ -51,20 +36,31 @@ func(r *appResolver) isOrganizer(p graphql.ResolveParams)error{
    if err != nil {
     return err
   }
-   if org.OwnerID != user.ID{
+   if org.OwnerID != user.ID && app.UserID != user.ID{
     return errors.New("Not Authorized")
    }
    return nil 
 }
-func(r *appResolver) isAuthenticated(p graphql.ResolveParams)(string,error){
-   u := p.Context.Value("user")
-   if u == nil {
-    return "",errors.New("Not Authorized")
-   }
-   user := u.(*types.Claims)
-   return user.ID,nil
-}
 
+func(r *appResolver) isOrganizer(p graphql.ResolveParams)error{
+   userId,err := middlewares.IsAuthenticated(p)
+   if err!= nil {
+    return err
+  }
+   id := p.Args["id"].(string) 
+   app,err := r.srv.GetApp(id)
+   if err != nil {
+    return err
+   }
+   org,err := r.osrv.GetOrg(app.Event().OrganizerID)
+   if err != nil {
+    return err
+  }
+   if org.OwnerID != userId{
+    return errors.New("Not Authorized")
+   }
+   return nil 
+}
 
 func (r *appResolver)App(p graphql.ResolveParams) (interface{},error){
   err := r.hasPerm(p)
@@ -134,7 +130,7 @@ func (r *appResolver)AcceptApp(p graphql.ResolveParams) (interface{},error){
   return app,nil
 }
 func (r *appResolver)CreateApp(p graphql.ResolveParams) (interface{},error){
-  uId,err := r.isAuthenticated(p)
+  uId,err := middlewares.IsAuthenticated(p)
   if err != nil {
     return nil,err
   }

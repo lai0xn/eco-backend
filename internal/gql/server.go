@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/graphql-go/handler"
-	"github.com/lai0xn/squid-tech/internal/middlewares"
+	"github.com/lai0xn/squid-tech/internal/middlewares/gql"
 )
 
 func Execute() {

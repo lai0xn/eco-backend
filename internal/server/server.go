@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/lai0xn/squid-tech/config"
 	"github.com/lai0xn/squid-tech/internal/gql"
-	"github.com/lai0xn/squid-tech/internal/middlewares"
+	"github.com/lai0xn/squid-tech/internal/middlewares/rest"
 	"github.com/lai0xn/squid-tech/internal/router"
 	"github.com/lai0xn/squid-tech/pkg/utils"
 	echoSwagger "github.com/swaggo/echo-swagger"
