@@ -10,5 +10,6 @@ var RootMutation = graphql.NewObject(graphql.ObjectConfig{
 		"EventCreate":   createEvent,
     "EventDelete":deleteEvent,
     "AppCreate":createApp,
+    "AppDelete":deleteApp,
 		},
 })

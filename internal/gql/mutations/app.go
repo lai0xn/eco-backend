@@ -38,7 +38,7 @@ var deleteApp = &graphql.Field{
       Type: graphql.String,
     },
   },
-  Resolve: resolvers.AppResolver.CreateApp,
+  Resolve: resolvers.AppResolver.DeleteApp,
 }
 
 

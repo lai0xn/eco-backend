@@ -29,7 +29,7 @@ func(r *appResolver) hasPerm(p graphql.ResolveParams)error{
    if err != nil {
     return err
    }
-   if app.UserID != user.ID {
+   if app.UserID != user.ID  && app.Event().OrganizerID != user.ID{
     return errors.New("Not Authorized")
    }
    return nil 
@@ -46,7 +46,10 @@ func(r *appResolver) isAuthenticated(p graphql.ResolveParams)(string,error){
 
 
 func (r *appResolver)App(p graphql.ResolveParams) (interface{},error){
-
+  err := r.hasPerm(p)
+  if err != nil {
+    return nil,err
+  }
   id,ok := p.Args["id"].(string)
   if !ok {
     return nil ,errors.New("No Args Provided")
