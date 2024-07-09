@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -53,9 +54,33 @@ func (h *PostsHandler) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"org": org,
-	})
+	return c.JSON(http.StatusOK,org)
+}
+
+// @Summary	Get Post endpoint
+// @Tags		posts
+// @Accept		json
+// @Produce	json
+// @Param page query string true "1"
+// @Success	200
+// @Router		/posts [get]
+func (h *PostsHandler) GetPage(c echo.Context) error {
+  var p int
+  page := c.QueryParam("page")
+  if page == "" {
+    p = 1
+  }
+  p,err := strconv.Atoi(page)
+  if err != nil {
+     	return echo.NewHTTPError(http.StatusBadRequest, err)
+  }
+	org, err := h.srv.GetPosts(p)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	return c.JSON(http.StatusOK,org)
 }
 
 // @Summary	Search Post endpoint
@@ -185,6 +210,63 @@ func (h *PostsHandler) Create(c echo.Context) error {
 
 	}
 	_, err = h.srv.CreatePost(claims.ID, payload.Content,payload.Description)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+	return c.JSON(http.StatusOK, types.Response{
+		"org": payload,
+	})
+}
+
+
+
+// @Summary	comment post endpoint
+// @Tags		posts
+// @Accept		json
+// @Produce	json
+// @Param		Authorization	header	string	true	"Bearer token"
+// @Param		body	body	types.CommentPayload	false "body"	
+// @Success	200
+// @Router		/posts/comment [post]
+func (h *PostsHandler) Comment(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*types.Claims)
+	var payload types.CommentPayload
+	err := c.Bind(&payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+	_, err = h.srv.CreateComment(claims.ID, payload.PostID,payload.Content)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+	return c.JSON(http.StatusOK, types.Response{
+		"org": payload,
+	})
+}
+
+
+// @Summary	delete comment endpoint
+// @Tags		posts
+// @Accept		json
+// @Produce	json
+// @Param		Authorization	header	string	true	"Bearer token"
+// @Success	200
+// @Router		/posts/comments/:id/delete [delete]
+func (h *PostsHandler) DeleteComment(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*types.Claims)
+	var payload types.CommentPayload
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+	_, err = h.srv.CreateComment(claims.ID, payload.PostID,payload.Content)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 

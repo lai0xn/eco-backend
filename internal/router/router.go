@@ -38,4 +38,5 @@ func SetRoutes(e *echo.Echo) {
 	orgsRoutes(v1)
 	OAuthRoutes(v1)
   eventRoutes(v1)
+  postRoutes(v1)
 }

@@ -26,6 +26,8 @@ func (s *PostService) GetPost(id string) (*db.PostModel, error) {
 	result, err := prisma.Client.Post.FindUnique(
 		db.Post.ID.Equals(id),
 	).With(db.Post.Author.Fetch(),db.Post.Comments.Fetch()).Exec(ctx)
+  result.Author().Password = ""
+  result.Author().EventsIds = nil
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +58,12 @@ func (s *PostService) GetPosts(page int) ([]db.PostModel, error) {
 	if err != nil {
 		return nil, err
 	}
+  for _,r := range result {
+       r.Author().Password = ""
+       r.Author().EventsIds = nil
+
+  }
+
 	return result, nil
 }
 
@@ -74,6 +82,7 @@ func (s *PostService) GetComment(id string) (*db.PostCommentModel, error) {
 	if err != nil {
 		return nil, err
 	}
+  
 	return result, nil
 }
 
@@ -124,11 +133,40 @@ func (s *PostService) CreatePost(userId string,content string, description strin
     db.Post.Author.Link(db.User.ID.Equals(userId)),
 
 	).Exec(ctx)
+
 	if err != nil {
 		return nil, err
 	}
 	return results, nil
 }
+
+func (s *PostService) CreateComment(userId string,postID,content string) (*db.PostCommentModel, error) {
+
+	ctx := context.Background()
+	results, err := prisma.Client.PostComment.CreateOne(
+		db.PostComment.Content.Set(content),
+    db.PostComment.Author.Link(db.User.ID.Equals(userId)),
+    db.PostComment.Post.Link(db.Post.ID.Equals(postID)),
+
+	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+func (s *PostService) DeleteComment(id string) (*db.PostCommentModel, error) {
+	ctx := context.Background()
+	results, err := prisma.Client.PostComment.FindUnique(
+    db.PostComment.ID.Equals(id),
+	).Delete().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+
 
 
 func (s *PostService) CommentPost(postid string, userid string,content string) (*db.PostCommentModel, error) {
@@ -149,16 +187,7 @@ func (s *PostService) CommentPost(postid string, userid string,content string) (
 
 
 
-func (s *PostService) DeleteComment(id string) (*db.PostCommentModel, error) {
-	ctx := context.Background()
-	results, err := prisma.Client.PostComment.FindUnique(
-		db.PostComment.ID.Equals(id),
-	).Delete().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return results, nil
-}
+
 
 
 

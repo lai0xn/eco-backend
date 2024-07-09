@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  types.CommentPayload:
+    properties:
+      content:
+        type: string
+      postID:
+        type: string
+    type: object
   types.LoginPayload:
     properties:
       email:
@@ -324,6 +331,65 @@ paths:
       summary: Update Organization endpoint
       tags:
       - organizations
+  /posts:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: "1"
+        in: query
+        name: page
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Post endpoint
+      tags:
+      - posts
+  /posts/comment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/types.CommentPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: comment post endpoint
+      tags:
+      - posts
+  /posts/comments/:id/delete:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: delete comment endpoint
+      tags:
+      - posts
   /posts/create:
     post:
       consumes:

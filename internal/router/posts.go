@@ -10,10 +10,14 @@ func postRoutes(e *echo.Group){
   g := e.Group("/posts")
   g.Use(jwtMiddelware)
 	g.GET("/post/get/:id", h.Get)
+  g.GET("", h.GetPage)
 	g.GET("/post/search", h.Search)
 	g.POST("/create", h.Create)
+  g.POST("/comment", h.Comment)
 	g.POST("/post/:id/image", h.UploadImage)
-	g.PATCH("/post/update/:id", h.Update)
-	g.DELETE("/post/delete/:id", h.Delete)
+	g.PATCH("/post/:id/update", h.Update)
+  g.DELETE("/post/delete/:id", h.Delete)
+  g.DELETE("/post/comments/:id/delete", h.DeleteComment)
+
   
 }
