@@ -29,11 +29,11 @@ var acceptApp = &graphql.Field{
   Args: graphql.FieldConfigArgument{
     "id":&graphql.ArgumentConfig{
       Type: graphql.String,
-    },
-   
+    }, 
   },
   Resolve: resolvers.AppResolver.AcceptApp,
 }
+
 
 
 var deleteApp = &graphql.Field{

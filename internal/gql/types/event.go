@@ -27,7 +27,10 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
       Type: graphql.Boolean,
     },
     "organizationId":&graphql.Field{
-      Type: graphql.Boolean,
+      Type: graphql.NewList(graphql.String),
+    },
+    "organization":&graphql.Field{
+      Type: OrgType,
     },
     "images":&graphql.Field{
       Type: graphql.NewList(graphql.String),
@@ -38,7 +41,29 @@ var EventType = graphql.NewObject(graphql.ObjectConfig{
 
 
   },
-}) 
+})
+
+var OrgType = graphql.NewObject(graphql.ObjectConfig{
+  Name: "Organization",
+  Fields: graphql.Fields{
+    "id":&graphql.Field{
+      Type: graphql.String,
+    },
+    "name":&graphql.Field{
+      Type: graphql.String,
+    },
+    "description":&graphql.Field{
+      Type: graphql.String,
+    },
+    "ownerId":&graphql.Field{
+      Type: graphql.String,
+    },
+    "image":&graphql.Field{
+      Type: graphql.String,
+    },
+   
+  },
+})
 
 
 
@@ -72,7 +97,18 @@ type Event struct {
   OrganizationId string `json:"organizationId"`
   Particapants []User `json:"participants"`
   Images []string `json:"images"`
+  Organization Organization `json:"organization"`
 }
+
+type Organization struct {
+  ID string `json:"id"`
+  Name string `json:"title"`
+  Description string `json:"description"`
+  Image string `json:"image"`
+  OwnerID string `json:"OwnerID"`
+}
+
+
 
 
 func EventFromModel(m *db.EventModel)Event{
@@ -103,12 +139,21 @@ func EventFromModel(m *db.EventModel)Event{
       }
       participants = append(participants,participant)
   }
+  org := Organization{
+    ID: m.OrganizerID,
+    Name: m.Organizer().Name,
+    Description: m.Organizer().Description,
+    Image: m.Organizer().Image,
+    OwnerID: m.Organizer().OwnerID,
+    
+  }
   return Event{
     ID:m.ID,
     Title: m.Title,
     Description: m.Description,
     Public: m.Public,
     Date: m.Date,
+    Organization:org,
     OrganizationId: m.OrganizerID,
     Particapants: participants,
     Images: m.Images,

@@ -17,6 +17,17 @@ var eventQuery = &graphql.Field{
   Resolve: resolvers.EventResolver.Event,
 }
 
+
+var eventsQuery = &graphql.Field{
+  Type: graphql.NewList(types.EventType),
+  Args: graphql.FieldConfigArgument{
+    "page":&graphql.ArgumentConfig{
+      Type: graphql.Int,
+    },
+  },
+  Resolve: resolvers.EventResolver.GetEvents,
+}
+
 var searchEventQuery = &graphql.Field{
   Type: graphql.NewList(types.EventType),
   Args: graphql.FieldConfigArgument{
@@ -36,6 +47,17 @@ var orgEventsQuery = &graphql.Field{
   },
   Resolve: resolvers.EventResolver.OrgEvents,
 }
+
+var eventComment = &graphql.Field{
+  Type: graphql.NewList(types.EventCommentType),
+  Args: graphql.FieldConfigArgument{
+    "id":&graphql.ArgumentConfig{
+      Type: graphql.String,
+    },
+  },
+  Resolve: resolvers.EventResolver.GetComment,
+}
+
 
 
 

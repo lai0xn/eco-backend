@@ -32,6 +32,36 @@ func (s *EventsService) GetEvent(id string) (*db.EventModel, error) {
 	return result, nil
 }
 
+
+func (s *EventsService) GetEvents(page int) ([]db.EventModel, error) {
+	ctx := context.Background()
+  limit := 10
+	result, err := prisma.Client.Event.FindMany().Skip((page-1)*limit).Take(limit).With(db.Event.Organizer.Fetch(),db.Event.Particapnts.Fetch()).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+
+
+
+func (s *EventsService) GetComment(id string) (*db.EventCommentModel, error) {
+	ctx := context.Background()
+	utils.Logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "get event",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.EventComment.FindUnique(
+		db.EventComment.ID.Equals(id),
+	).With(db.EventComment.User.Fetch()).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (s *EventsService) GetOrgEvents(id string) ([]db.EventModel, error) {
 	ctx := context.Background()
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
@@ -105,6 +135,37 @@ func (s *EventsService) CreateEvent(id string, payload types.EventPayload) (*db.
 	}
 	return results, nil
 }
+
+
+func (s *EventsService) CommentEvent(eventid string, userid string,content string) (*db.EventCommentModel, error) {
+	utils.Logger.LogInfo().Fields(map[string]interface{}{
+		"query":   "create event",
+	}).Msg("DB Query")
+	ctx := context.Background()
+	results, err := prisma.Client.EventComment.CreateOne(
+		db.EventComment.Content.Set(content),
+    db.EventComment.Event.Link(db.Event.ID.Equals(eventid)),
+    db.EventComment.User.Link(db.User.ID.Equals(userid)),
+	).Exec(ctx)
+  if err != nil {
+    return nil,err
+  }
+  return results, nil
+}
+
+
+
+func (s *EventsService) DeleteComment(id string) (*db.EventCommentModel, error) {
+	ctx := context.Background()
+	results, err := prisma.Client.EventComment.FindUnique(
+		db.EventComment.ID.Equals(id),
+	).Delete().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 
 func (s *EventsService) AddImage(id string, path string) ([]string, error) {
 	fmt.Println(id)

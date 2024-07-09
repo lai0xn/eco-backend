@@ -4,9 +4,9 @@ import "github.com/graphql-go/graphql"
 
 
 var EventCommentType = graphql.NewObject(graphql.ObjectConfig{
-  Name:"Application",
+  Name:"EventComment",
   Fields: graphql.Fields{
-    "ID" : &graphql.Field{
+    "id" : &graphql.Field{
       Type: graphql.String,
     },
     "eventID":&graphql.Field{

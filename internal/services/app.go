@@ -49,12 +49,7 @@ func (s *AppService) AcceptApp(id string) (*db.EventApplicationModel, error) {
 	).Update(
     db.EventApplication.Accepted.Set(true),
     ).Exec(ctx)
-  _, err = prisma.Client.Event.FindUnique(
-		db.Event.ID.Equals(result.EventID),
-	).Update(
-    db.Event.Particapnts.Link(db.User.ID.Equals(result.UserID)),
-    ).Exec(ctx)
-
+ 
 	if err != nil {
 		return nil, err
 	}

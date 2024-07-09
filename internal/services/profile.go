@@ -24,7 +24,7 @@ func (s *ProfileService) GetUser(id string) (*db.UserModel, error) {
 	ctx := context.Background()
 	user, err := prisma.Client.User.FindUnique(
 		db.User.ID.Equals(id),
-	).Exec(ctx)
+	).Omit(db.User.Password.Field()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (s *ProfileService) GetUserByEmail(email string) (*db.UserModel, error) {
 	ctx := context.Background()
 	user, err := prisma.Client.User.FindUnique(
 		db.User.Email.Equals(email),
-	).Exec(ctx)
+	).Omit(db.User.Password.Field()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (s *ProfileService) SearchByName(name string) ([]db.UserModel, error) {
 	ctx := context.Background()
 	users, err := prisma.Client.User.FindMany(
 		db.User.Name.Contains(name),
-	).Exec(ctx)
+	).Omit(db.User.Password.Field()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
