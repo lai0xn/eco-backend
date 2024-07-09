@@ -24,6 +24,17 @@ var createApp = &graphql.Field{
   Resolve: resolvers.AppResolver.CreateApp,
 }
 
+var acceptApp = &graphql.Field{
+  Type: types.ApplicationType,
+  Args: graphql.FieldConfigArgument{
+    "id":&graphql.ArgumentConfig{
+      Type: graphql.String,
+    },
+   
+  },
+  Resolve: resolvers.AppResolver.AcceptApp,
+}
+
 
 var deleteApp = &graphql.Field{
   Type: types.ApplicationType,

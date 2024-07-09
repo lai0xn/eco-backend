@@ -120,6 +120,19 @@ func (s *EventsService) AddImage(id string, path string) ([]string, error) {
 	return result.Images, nil
 }
 
+func (s *EventsService)JoinEvent(eventId string,userId string)(*db.EventModel,error) {
+  ctx := context.Background()
+  result,err:= prisma.Client.Event.FindUnique(
+      db.Event.ID.Equals(eventId),
+  ).Update(
+      db.Event.Particapnts.Link(db.User.ID.Equals(userId)),
+  ).Exec(ctx)
+  if err != nil {
+     return nil,err
+  }
+  return result,nil
+}
+
 func (s *EventsService) DeleteEvent(id string) (string, error) {
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "delete org",

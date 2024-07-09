@@ -11,11 +11,13 @@ import (
 func NewAppResolver() *appResolver{
   return &appResolver{
     srv:services.NewAppService(),
+    osrv: services.NewOrgService(),
   }
 }
 
 type appResolver struct{
   srv *services.AppService
+  osrv *services.OrgService
 }
 
 func(r *appResolver) hasPerm(p graphql.ResolveParams)error{
@@ -34,7 +36,26 @@ func(r *appResolver) hasPerm(p graphql.ResolveParams)error{
    }
    return nil 
 }
-
+func(r *appResolver) isOrganizer(p graphql.ResolveParams)error{
+   id := p.Args["id"].(string)
+   u := p.Context.Value("user")
+   if u == nil {
+    return errors.New("Not Authorized")
+   }
+   user := u.(*types.Claims)
+   app,err := r.srv.GetApp(id)
+   if err != nil {
+    return err
+   }
+   org,err := r.osrv.GetOrg(app.Event().OrganizerID)
+   if err != nil {
+    return err
+  }
+   if org.OwnerID != user.ID{
+    return errors.New("Not Authorized")
+   }
+   return nil 
+}
 func(r *appResolver) isAuthenticated(p graphql.ResolveParams)(string,error){
    u := p.Context.Value("user")
    if u == nil {
@@ -81,7 +102,37 @@ func (r *appResolver)App(p graphql.ResolveParams) (interface{},error){
   }
   return app,nil
 }
-
+func (r *appResolver)AcceptApp(p graphql.ResolveParams) (interface{},error){
+  if err := r.isOrganizer(p);err!= nil {
+    return nil,err
+  }
+  u := p.Context.Value("user")
+  if u == nil {
+    return "",errors.New("Unothorized")
+  }
+  appId,ok := p.Args["id"].(string)
+  if !ok {
+    return "" ,errors.New("No Args Provided")
+  }
+  a,err := r.srv.AcceptApp(appId)
+  if err != nil {
+    return nil,err
+  }
+  var ex string
+  ex,ok = a.Extra()
+  if !ok {
+    ex = ""
+  }
+  app := map[string]interface{}{
+    "id":a.ID,
+    "eventID":a.EventID,
+    "motivation":a.Motivation,
+    "userId":a.UserID,
+    "accepted":a.Accepted,
+    "extra":ex,
+  }
+  return app,nil
+}
 func (r *appResolver)CreateApp(p graphql.ResolveParams) (interface{},error){
   uId,err := r.isAuthenticated(p)
   if err != nil {
@@ -91,7 +142,7 @@ func (r *appResolver)CreateApp(p graphql.ResolveParams) (interface{},error){
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
-  content,ok := p.Args["content"].(string)
+  content,ok := p.Args["motivation"].(string)
   if !ok {
     return nil ,errors.New("No Args Provided")
   }

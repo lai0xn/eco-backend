@@ -20,3 +20,13 @@ var deleteEvent = &graphql.Field{
   },
   Resolve: resolvers.EventResolver.DeleteEvent,
 }
+
+var joinEvent = &graphql.Field{
+  Type: types.EventType,
+  Args : graphql.FieldConfigArgument{
+    "id":&graphql.ArgumentConfig{
+      Type: graphql.String,
+    },
+  },
+  Resolve: resolvers.EventResolver.JoinEvent,
+}

@@ -41,6 +41,25 @@ func(r *eventResolver) hasPerm(p graphql.ResolveParams)error{
    return nil
   
 }
+
+func(r *eventResolver) isOwner(p graphql.ResolveParams)error{
+   eventId := p.Args["id"].(string)
+   u := p.Context.Value("user")
+   if u == nil {
+    return errors.New("Not Authorized")
+   }
+   user := u.(*types.Claims)
+   event,err := r.srv.GetEvent(eventId)
+   if err != nil {
+    return err
+   }
+   org := event.Organizer() 
+   if  org.OwnerID!= user.ID {
+    return errors.New("Not Authorized")
+   }
+   return nil
+  
+}
 //Get Event By Id
 
 func (r *eventResolver)Event(p graphql.ResolveParams) (interface{},error){
@@ -96,8 +115,12 @@ func (r *eventResolver)OrgEvents(p graphql.ResolveParams) (interface{},error){
 
 
 func (r *eventResolver)DeleteEvent(p graphql.ResolveParams) (interface{},error){
-  r.hasPerm(p)
+  err := r.isOwner(p)
+  if err != nil {
+    return nil,err
+  }
   id,ok := p.Args["id"].(string)
+
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
@@ -105,8 +128,27 @@ func (r *eventResolver)DeleteEvent(p graphql.ResolveParams) (interface{},error){
   if err != nil {
     return nil,err
   }
- 
+
   return e,nil
+}
+
+func (r *eventResolver)JoinEvent(p graphql.ResolveParams) (interface{},error){
+ 
+  u := p.Context.Value("user")
+  if u == nil {
+    return "",errors.New("Unothorized")
+  }
+  user := u.(*types.Claims)
+  eventId,ok := p.Args["id"].(string)
+  if !ok {
+    return "" ,errors.New("No Args Provided")
+  }
+  e,err := r.srv.JoinEvent(eventId,user.ID)
+  if err != nil {
+    return nil,err
+  }
+  event := t.EventFromModel(e)
+  return event,nil
 }
 
 func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){

@@ -25,7 +25,35 @@ func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 
 	result, err := prisma.Client.EventApplication.FindUnique(
 		db.EventApplication.ID.Equals(id),
-	).With(db.EventApplication.Event.Fetch()).Exec(ctx)
+	).With(
+    db.EventApplication.Event.Fetch(),
+    ).Exec(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+
+func (s *AppService) AcceptApp(id string) (*db.EventApplicationModel, error) {
+	ctx := context.Background()
+	utils.Logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "accept app",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.EventApplication.FindUnique(
+		db.EventApplication.ID.Equals(id),
+	).Update(
+    db.EventApplication.Accepted.Set(true),
+    ).Exec(ctx)
+  _, err = prisma.Client.Event.FindUnique(
+		db.Event.ID.Equals(result.EventID),
+	).Update(
+    db.Event.Particapnts.Link(db.User.ID.Equals(result.UserID)),
+    ).Exec(ctx)
+
 	if err != nil {
 		return nil, err
 	}
