@@ -33,6 +33,22 @@ func (s *PostService) GetPost(id string) (*db.PostModel, error) {
 }
 
 
+func (s *PostService) UploadImage(id string,path string) (*db.PostModel, error) {
+	ctx := context.Background()
+	utils.Logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "upload image post",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.Post.FindUnique(
+		db.Post.ID.Equals(id),
+	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (s *PostService) GetPosts(page int) ([]db.PostModel, error) {
 	ctx := context.Background()
   limit := 10
@@ -80,7 +96,7 @@ func (s *PostService) SearchPost(name string) ([]db.PostModel, error) {
 	return result, nil
 }
 
-func (s *PostService) UpdatePost(id string, payload types.EventPayload) (*db.PostModel, error) {
+func (s *PostService) UpdatePost(id string, payload types.PostPayload) (*db.PostModel, error) {
 	ctx := context.Background()
 	utils.Logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "update org",
@@ -90,7 +106,7 @@ func (s *PostService) UpdatePost(id string, payload types.EventPayload) (*db.Pos
 	results, err := prisma.Client.Post.FindUnique(
 		db.Post.ID.Equals(id),
 	).Update(
-		db.Post.Content.Set(payload.Title),
+		db.Post.Content.Set(payload.Content),
 		db.Post.Description.Set(payload.Description),
 	).Exec(ctx)
 	if err != nil {
