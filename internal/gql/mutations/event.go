@@ -10,3 +10,13 @@ var createEvent = &graphql.Field{
   Args: types.EventCreationArgs,
   Resolve: resolvers.EventResolver.CreateEvent,
 }
+
+var deleteEvent = &graphql.Field{
+  Type: graphql.String,
+  Args: graphql.FieldConfigArgument{
+    "id":&graphql.ArgumentConfig{
+      Type: graphql.String,
+    },
+  },
+  Resolve: resolvers.EventResolver.DeleteEvent,
+}

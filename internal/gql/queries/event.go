@@ -27,4 +27,16 @@ var searchEventQuery = &graphql.Field{
   Resolve: resolvers.EventResolver.SearchEvent,
 }
 
+var orgEventsQuery = &graphql.Field{
+  Type: graphql.NewList(types.EventType),
+  Args: graphql.FieldConfigArgument{
+    "id":&graphql.ArgumentConfig{
+      Type: graphql.String,
+    },
+  },
+  Resolve: resolvers.EventResolver.OrgEvents,
+}
+
+
+
 

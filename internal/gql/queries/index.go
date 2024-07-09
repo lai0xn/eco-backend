@@ -8,6 +8,7 @@ var RootQuery = graphql.NewObject(graphql.ObjectConfig{
   Fields: graphql.Fields{
       "Event":eventQuery,
       "SearchEvent":searchEventQuery,
+      "OrgEvents":orgEventsQuery,
     },
   },
 )

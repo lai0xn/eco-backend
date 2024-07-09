@@ -76,6 +76,39 @@ func (r *eventResolver)SearchEvent(p graphql.ResolveParams) (interface{},error){
   return events,nil
 }
 
+func (r *eventResolver)OrgEvents(p graphql.ResolveParams) (interface{},error){
+  id,ok := p.Args["id"].(string)
+  if !ok {
+    return nil ,errors.New("No Args Provided")
+  }
+  e,err := r.srv.GetOrgEvents(id)
+  if err != nil {
+    return nil,err
+  }
+  var events []t.Event
+  for _,event := range e {
+    n := t.EventFromModel(&event)
+    events = append(events, n)
+  }
+  fmt.Println(e)
+  return events,nil
+}
+
+
+func (r *eventResolver)DeleteEvent(p graphql.ResolveParams) (interface{},error){
+  r.hasPerm(p)
+  id,ok := p.Args["id"].(string)
+  if !ok {
+    return nil ,errors.New("No Args Provided")
+  }
+  e,err := r.srv.DeleteEvent(id)
+  if err != nil {
+    return nil,err
+  }
+ 
+  return e,nil
+}
+
 func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if err := r.hasPerm(p);err!= nil {
     return nil,errors.New("Access Denied")
