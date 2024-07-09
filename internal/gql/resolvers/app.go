@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"errors"
-	"log"
 
 	"github.com/graphql-go/graphql"
 	"github.com/lai0xn/squid-tech/internal/services"
@@ -99,6 +98,35 @@ func (r *appResolver)CreateApp(p graphql.ResolveParams) (interface{},error){
   }
   
   a,err := r.srv.CreateApp(id,uId,content,extra)
+  if err != nil {
+    return nil,err
+  }
+  ex,ok := a.Extra()
+  if !ok{
+    return nil,errors.New("something wrong")
+  }
+  app := map[string]interface{}{
+    "id":a.ID,
+    "eventID":a.EventID,
+    "motivation":a.Motivation,
+    "userId":a.UserID,
+    "accepted":a.Accepted,
+    "extra":ex,
+  }
+  return app,nil
+}
+
+func (r *appResolver)DeleteApp(p graphql.ResolveParams) (interface{},error){
+  err := r.hasPerm(p)
+  if err != nil {
+    return nil,err
+  }
+  id,ok := p.Args["id"].(string)
+  if !ok {
+    return nil ,errors.New("No Args Provided")
+  }
+  
+  a,err := r.srv.DeleteApp(id)
   if err != nil {
     return nil,err
   }
