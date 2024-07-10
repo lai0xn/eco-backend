@@ -53,9 +53,7 @@ func (h *orgHandler) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"org": org,
-	})
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Search Organization endpoint
@@ -74,9 +72,7 @@ func (h *orgHandler) Search(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Organization Image endpoint
@@ -136,7 +132,7 @@ func (h *orgHandler) ChangeBg(c echo.Context) error {
 	io.Copy(f, src)
 	_, err = h.srv.UpdateOrgBg(org.ID, path)
 	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
+		"img": path,
 	})
 }
 

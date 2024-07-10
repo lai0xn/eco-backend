@@ -213,11 +213,12 @@ func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
-  event,err := r.srv.CreateEvent(orgID,types.EventPayload{
+  event,err := r.srv.CreateEvent(types.EventPayload{
     Title:title,
     Description: description,
     Public: public,
     Date: date,
+    OrgID: orgID,
   })
   if err != nil {
     return nil,err

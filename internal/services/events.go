@@ -112,17 +112,16 @@ func (s *EventsService) UpdateEvent(id string, payload types.EventPayload) (*db.
 	return results, nil
 }
 
-func (s *EventsService) CreateEvent(id string, payload types.EventPayload) (*db.EventModel, error) {
+func (s *EventsService) CreateEvent(payload types.EventPayload) (*db.EventModel, error) {
 	logger.LogInfo().Fields(map[string]interface{}{
 		"query":   "create org",
-		"ownerId": id,
 		"params":  payload,
 	}).Msg("DB Query")
 	ctx := context.Background()
 	results, err := prisma.Client.Event.CreateOne(
 		db.Event.Title.Set(payload.Title),
 		db.Event.Description.Set(payload.Description),
-		db.Event.Organizer.Link(db.Organization.ID.Equals(id)),
+		db.Event.Organizer.Link(db.Organization.ID.Equals(payload.OrgID)),
 		db.Event.Date.Set(payload.Date),
     db.Event.Location.Set(payload.Location),
 		db.Event.Public.Set(payload.Public),

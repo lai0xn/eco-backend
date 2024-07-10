@@ -7,6 +7,7 @@ type EventPayload struct {
   Description string `json:"description"`
   Public bool `json:"public"`
   Date time.Time `json:"date"`
+  OrgID string `json:"orgId"`
   Location string `json:"location"`
 }
 
