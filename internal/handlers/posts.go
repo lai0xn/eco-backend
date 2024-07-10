@@ -178,7 +178,7 @@ func (h *PostsHandler) Update(c echo.Context) error {
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
 // @Success	200
-// @Router		/posts/org/delete/:id [delete]
+// @Router		/posts/post/:id/delete [delete]
 func (h *PostsHandler) Delete(c echo.Context) error {
 
 	org, err := h.hasPerm(c)

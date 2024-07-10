@@ -16,7 +16,7 @@ func postRoutes(e *echo.Group){
   g.POST("/comment", h.Comment)
 	g.POST("/post/:id/image", h.UploadImage)
 	g.PATCH("/post/:id/update", h.Update)
-  g.DELETE("/post/delete/:id", h.Delete)
+  g.DELETE("/post/:id/delete", h.Delete)
   g.DELETE("/post/comments/:id/delete", h.DeleteComment)
 
   

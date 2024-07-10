@@ -67,6 +67,37 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/auth/verify": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verification endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userid",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "otp",
+                        "name": "otp",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/events": {
             "get": {
                 "consumes": [
@@ -773,7 +804,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/posts/org/delete/:id": {
+        "/posts/post/:id/delete": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -1163,7 +1194,7 @@ const docTemplate = `{
                 "content": {
                     "type": "string"
                 },
-                "postId": {
+                "postID": {
                     "type": "string"
                 }
             }

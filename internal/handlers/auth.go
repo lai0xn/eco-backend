@@ -74,7 +74,7 @@ func (h *authHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, utils.NewValidationError(e))
 	}
 	//TODO: fix gender
-	user,err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, false)
+	user,err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, payload.Gender)
   if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -82,7 +82,10 @@ func (h *authHandler) Register(c echo.Context) error {
   if err != nil {
     return echo.NewHTTPError(http.StatusBadRequest,err)
   }
-	return c.JSON(http.StatusOK,"user created and verification sent")
+	return c.JSON(http.StatusOK,types.Response{
+    "message":"verification email sent",
+    "userID":user.ID,
+  })
 }
 
 
@@ -95,7 +98,7 @@ func (h *authHandler) Register(c echo.Context) error {
 //	@Accept		json
 //	@Produce	json
 //	@Param		id		query		string	true	"userid"
-//	@Param		id		otp		string	true	"otp"
+//	@Param		otp		query		string	true	"otp"
 //	@Router		/auth/verify [post]
 func (h *authHandler) VerifyUser(c echo.Context) error {
   id := c.QueryParam("id")
@@ -106,5 +109,7 @@ func (h *authHandler) VerifyUser(c echo.Context) error {
   if err := h.srv.ActivateUser(id);err!=nil{
      return echo.NewHTTPError(http.StatusBadRequest,err)
   }
-	return c.JSON(http.StatusOK,"verification successfull")
+	return c.JSON(http.StatusOK,types.Response{
+    "message":"user activated",
+  })
 }

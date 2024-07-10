@@ -19,4 +19,5 @@ func eventRoutes(e *echo.Group) {
 	events.POST("/event/:id/upload",h.AddImage)
   events.DELETE("/event/acheivment/:id/delete",h.DeleteAcheivment)
 
+
 }

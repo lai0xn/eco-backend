@@ -15,7 +15,7 @@ definitions:
     properties:
       content:
         type: string
-      postId:
+      postID:
         type: string
     type: object
   types.EventPayload:
@@ -127,6 +127,27 @@ paths:
       - application/json
       responses: {}
       summary: Registration endpoint
+      tags:
+      - auth
+  /auth/verify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: userid
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: otp
+        in: query
+        name: otp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Verification endpoint
       tags:
       - auth
   /events:
@@ -584,7 +605,7 @@ paths:
       summary: create post endpoint
       tags:
       - posts
-  /posts/org/delete/:id:
+  /posts/post/:id/delete:
     delete:
       consumes:
       - application/json
