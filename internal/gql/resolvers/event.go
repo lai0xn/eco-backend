@@ -90,7 +90,7 @@ func (r *eventResolver)Event(p graphql.ResolveParams) (interface{},error){
   if err != nil {
     return nil,err
   }
-  event := t.EventFromModel(e)
+  event := t.EventToStruct(e) 
   return event,nil
 }
 
@@ -105,7 +105,7 @@ func (r *eventResolver)GetEvents(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   return events,nil
@@ -122,7 +122,7 @@ func (r *eventResolver)SearchEvent(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   return events,nil
@@ -139,7 +139,7 @@ func (r *eventResolver)OrgEvents(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   fmt.Println(e)
@@ -213,17 +213,22 @@ func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
-  event,err := r.srv.CreateEvent(types.EventPayload{
+  location,ok := p.Args["locatiom"].(string)
+  if !ok {
+    return nil ,errors.New("No Args Provided")
+  }
+  e,err := r.srv.CreateEvent(types.EventPayload{
     Title:title,
     Description: description,
     Public: public,
     Date: date,
     OrgID: orgID,
+    Location: location,
   })
   if err != nil {
     return nil,err
   }
-  return event.ID,nil
+  return e.ID,nil
 }
 
 

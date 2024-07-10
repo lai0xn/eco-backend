@@ -46,7 +46,7 @@ var commentEvent = &graphql.Field{
 }
 
 var deleteComment = &graphql.Field{
-  Type: graphql.String,
+  Type: graphql.Boolean,
   Args : graphql.FieldConfigArgument{
     "id":&graphql.ArgumentConfig{
       Type: graphql.String,

@@ -25,7 +25,7 @@ func (s *EventsService) GetEvent(id string) (*db.EventModel, error) {
 
 	result, err := prisma.Client.Event.FindUnique(
 		db.Event.ID.Equals(id),
-	).With(db.Event.Organizer.Fetch(), db.Event.Particapnts.Fetch()).Exec(ctx)
+	).With(db.Event.Organizer.Fetch(), db.Event.Particapnts.Fetch(),db.Event.Achievments.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (s *EventsService) CreateEvent(payload types.EventPayload) (*db.EventModel,
 		db.Event.Date.Set(payload.Date),
     db.Event.Location.Set(payload.Location),
 		db.Event.Public.Set(payload.Public),
-	).Exec(ctx)
+    ).With().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
