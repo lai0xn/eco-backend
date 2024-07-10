@@ -3,7 +3,6 @@ package server
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/lai0xn/squid-tech/internal/gql"
 	middlewares "github.com/lai0xn/squid-tech/internal/middlewares/rest"
 	"github.com/lai0xn/squid-tech/internal/router"
 	"github.com/lai0xn/squid-tech/pkg/logger"
@@ -40,7 +39,7 @@ func (s *Server) Setup(e *echo.Echo) {
 func (s *Server) Run() {
 	e := echo.New()
 	s.Setup(e)
-	logger.LogInfo().Msg("graphql server running on port 5000")
-	go gql.Execute()
+	// logger.LogInfo().Msg("graphql server running on port 5000")
+	// go gql.Execute()
 	logger.LogInfo().Msg(e.Start(s.PORT).Error())
 }

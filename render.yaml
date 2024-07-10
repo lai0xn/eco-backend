@@ -5,7 +5,14 @@
       plan: free
       envVars:
         - fromGroup: squid-tech-settings
-      
+    
+    - type: web
+      name: squid-tech-graph-ql
+      runtime: docker
+      plan: free
+      envVars:
+        - fromGroup: squid-tech-settings
+        
     - type: redis
       name: lightning
       ipAllowList:
