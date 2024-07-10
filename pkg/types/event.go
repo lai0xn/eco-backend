@@ -11,3 +11,8 @@ type EventPayload struct {
   Location string `json:"location"`
 }
 
+type AcheivmentPayload struct {
+  Title string `json:"string"`
+  Details string `json:"details"`
+  EventID string `json:"eventId"`
+}

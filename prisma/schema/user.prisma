@@ -15,8 +15,6 @@ model User {
   posts Post[]
   badges Badge[] 
   applications EventApplication[]
-  posts         Post[]
-  applications  EventApplication[]
   Organizations Organization[]
   eventsIds     String[]           @db.ObjectId
   createdAt     DateTime           @default(now())

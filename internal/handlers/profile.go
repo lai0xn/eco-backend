@@ -185,18 +185,15 @@ func (h *profileHandler) CurrentUser(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*types.Claims)
 	u, err := h.srv.GetUser(claims.ID)
+  if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+  p,err := h.srv.GetUser(u.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"user": types.Response{
-			"id":    claims.ID,
-			"name":  claims.Name,
-			"email": claims.Email,
-			"bio":   u.Bio,
-		},
-	})
+	return c.JSON(http.StatusOK, p)
 }
 
 // @Summary	Delete Profile endpoint

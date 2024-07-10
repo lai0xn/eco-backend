@@ -148,6 +148,39 @@ func (s *EventsService) CommentEvent(eventid string, userid string, content stri
 	return results, nil
 }
 
+func (s *EventsService) CreateAcheivment(payload types.AcheivmentPayload,orgId string)(*db.AcheivmentModel, error) {
+  
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event",
+	}).Msg("DB Query")
+	ctx := context.Background()
+	results, err := prisma.Client.Acheivment.CreateOne(
+		db.Acheivment.Name.Set(payload.Title),
+		db.Acheivment.Details.Set(payload.Details),
+    db.Acheivment.Org.Link(db.Organization.ID.Equals(orgId)),
+		db.Acheivment.Event.Link(db.Event.ID.Equals(payload.EventID)),
+	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+func (s *EventsService) DeleteAcheivment(id string)(*db.AcheivmentModel, error) {
+  
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event",
+	}).Msg("DB Query")
+	ctx := context.Background()
+	results,err := prisma.Client.Acheivment.FindUnique(
+    db.Acheivment.ID.Equals(id),
+		).Delete().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 func (s *EventsService) DeleteComment(id string) (*db.EventCommentModel, error) {
 	ctx := context.Background()
 	results, err := prisma.Client.EventComment.FindUnique(

@@ -24,7 +24,7 @@ func (s *ProfileService) GetUser(id string) (*db.UserModel, error) {
 	ctx := context.Background()
 	user, err := prisma.Client.User.FindUnique(
 		db.User.ID.Equals(id),
-	).Omit(db.User.Password.Field()).Exec(ctx)
+	).Omit(db.User.Password.Field()).With(db.User.Events.Fetch(),db.User.Posts.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
