@@ -7,5 +7,5 @@ type PostPayload struct {
 
 type CommentPayload struct {
   Content string `json:"content"`
-  PostID string `json:postId"`
+  PostID string `json:"postId"`
 }

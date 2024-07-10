@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
-	"github.com/lai0xn/squid-tech/pkg/utils"
 	"github.com/lai0xn/squid-tech/prisma"
 	"github.com/lai0xn/squid-tech/prisma/db"
 )
@@ -18,7 +18,7 @@ func NewOrgService() *OrgService {
 
 func (s *OrgService) GetOrg(id string) (*db.OrganizationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get org",
 		"params": id,
 	}).Msg("DB Query")
@@ -34,7 +34,7 @@ func (s *OrgService) GetOrg(id string) (*db.OrganizationModel, error) {
 
 func (s *OrgService) GetUserOrgs(id string) ([]db.OrganizationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get user orgs",
 		"params": id,
 	}).Msg("DB Query")
@@ -49,7 +49,7 @@ func (s *OrgService) GetUserOrgs(id string) ([]db.OrganizationModel, error) {
 
 func (s *OrgService) SearchOrg(name string) ([]db.OrganizationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "search org",
 		"params": name,
 	}).Msg("DB Query")
@@ -64,7 +64,7 @@ func (s *OrgService) SearchOrg(name string) ([]db.OrganizationModel, error) {
 
 func (s *OrgService) UpdateOrg(id string, payload types.OrgPayload) (*db.OrganizationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "update org",
 		"id":     id,
 		"params": payload,
@@ -82,7 +82,7 @@ func (s *OrgService) UpdateOrg(id string, payload types.OrgPayload) (*db.Organiz
 }
 
 func (s *OrgService) CreateOrg(id string, payload types.OrgPayload) (*db.OrganizationModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":   "create org",
 		"ownerId": id,
 		"params":  payload,
@@ -130,7 +130,7 @@ func (s *OrgService) UpdateOrgBg(id string, path string) (string, error) {
 }
 
 func (s *OrgService) DeleteOrg(id string) (string, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "delete org",
 		"params": id,
 	}).Msg("DB Query")

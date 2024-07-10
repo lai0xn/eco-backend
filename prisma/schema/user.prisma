@@ -1,22 +1,23 @@
 model User {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  email   String @unique
-  name    String
-  bio     String
-  image String
-  gender Boolean 
-  password String
-  phone String?
-  bg_img String
-  Adress String?
-  events Event[] @relation(fields:[eventsIds],references:[id])
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  email         String             @unique
+  name          String
+  bio           String
+  image         String
+  gender        Boolean
+  password      String
+  phone         String?
+  bg_img        String
+  Adress        String?
+  events        Event[]            @relation(fields: [eventsIds], references: [id])
   eventComments EventComment[]
   postsComments PostComment[]
   posts Post[]
   badges Badge[] 
   applications EventApplication[]
+  posts         Post[]
+  applications  EventApplication[]
   Organizations Organization[]
-  eventsIds String[] @db.ObjectId
-  createdAt DateTime @default(now())
-  
+  eventsIds     String[]           @db.ObjectId
+  createdAt     DateTime           @default(now())
 }

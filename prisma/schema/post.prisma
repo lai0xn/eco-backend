@@ -1,20 +1,20 @@
 model Post {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  description String
-  author  User @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
-  createdAt DateTime @default(now())
-  comments PostComment[]
-  image String?
- }
+   id          String        @id @default(auto()) @map("_id") @db.ObjectId
+   content     String
+   description String
+   author      User          @relation(fields: [authorId], references: [id])
+   authorId    String        @db.ObjectId
+   createdAt   DateTime      @default(now())
+   comments    PostComment[]
+   images      String
+}
 
- model PostComment {
-    id      String   @id @default(auto()) @map("_id") @db.ObjectId
-    content String
-    createdAt DateTime @default(now())
-    author  User @relation(fields: [authorId], references: [id])
-    authorId String @db.ObjectId
-    post  Post @relation(fields: [postId], references: [id])
-    postId String @db.ObjectId
- }
+model PostComment {
+   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+   content   String
+   createdAt DateTime @default(now())
+   author    User     @relation(fields: [authorId], references: [id])
+   authorId  String   @db.ObjectId
+   post      Post     @relation(fields: [postId], references: [id])
+   postId    String   @db.ObjectId
+}

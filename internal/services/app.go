@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/lai0xn/squid-tech/pkg/utils"
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/prisma"
 	"github.com/lai0xn/squid-tech/prisma/db"
 )
@@ -15,10 +15,9 @@ func NewAppService() *AppService {
 	return &AppService{}
 }
 
-
 func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get app",
 		"params": id,
 	}).Msg("DB Query")
@@ -26,9 +25,9 @@ func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 	result, err := prisma.Client.EventApplication.FindUnique(
 		db.EventApplication.ID.Equals(id),
 	).With(
-    db.EventApplication.Event.Fetch(),
-    db.EventApplication.User.Fetch(),
-    ).Exec(ctx)
+		db.EventApplication.Event.Fetch(),
+		db.EventApplication.User.Fetch(),
+	).Exec(ctx)
 
 	if err != nil {
 		return nil, err
@@ -36,10 +35,9 @@ func (s *AppService) GetApp(id string) (*db.EventApplicationModel, error) {
 	return result, nil
 }
 
-
 func (s *AppService) AcceptApp(id string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "accept app",
 		"params": id,
 	}).Msg("DB Query")
@@ -47,19 +45,18 @@ func (s *AppService) AcceptApp(id string) (*db.EventApplicationModel, error) {
 	result, err := prisma.Client.EventApplication.FindUnique(
 		db.EventApplication.ID.Equals(id),
 	).Update(
-    db.EventApplication.Accepted.Set(true),
-    ).Exec(ctx)
- 
+		db.EventApplication.Accepted.Set(true),
+	).Exec(ctx)
+
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-
 func (s *AppService) DeleteApp(id string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get app",
 		"params": id,
 	}).Msg("DB Query")
@@ -75,7 +72,7 @@ func (s *AppService) DeleteApp(id string) (*db.EventApplicationModel, error) {
 
 func (s *AppService) GetEventApps(id string) ([]db.EventApplicationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get event apps",
 		"params": id,
 	}).Msg("DB Query")
@@ -88,21 +85,20 @@ func (s *AppService) GetEventApps(id string) ([]db.EventApplicationModel, error)
 	return result, nil
 }
 
-func (s *AppService) CreateApp(eventId string,userId string,content string,extra string) (*db.EventApplicationModel, error) {
+func (s *AppService) CreateApp(eventId string, userId string, content string, extra string) (*db.EventApplicationModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
-		"query":  "create event app",
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event app",
 	}).Msg("DB Query")
 	result, err := prisma.Client.EventApplication.CreateOne(
 		db.EventApplication.Event.Link(db.Event.ID.Equals(eventId)),
-    db.EventApplication.User.Link(db.User.ID.Equals(userId)),
-    db.EventApplication.Motivation.Set(content),
-    db.EventApplication.Accepted.Set(false),
-    db.EventApplication.Extra.Set(extra),  
-
+		db.EventApplication.User.Link(db.User.ID.Equals(userId)),
+		db.EventApplication.Motivation.Set(content),
+		db.EventApplication.Accepted.Set(false),
+		db.EventApplication.Extra.Set(extra),
 	).Exec(ctx)
 	if err != nil {
-    log.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	return result, nil

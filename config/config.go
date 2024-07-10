@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/facebook"
@@ -14,7 +15,7 @@ var JWT_SECRET string
 
 func Load() {
 	// OAuth configuration
-  godotenv.Load()
+	godotenv.Load()
 	types.OAuth2Configs = map[string]*types.OAuthProvider{
 		"google": {
 			Config: &oauth2.Config{
@@ -38,4 +39,7 @@ func Load() {
 
 	// JWT Secret
 	JWT_SECRET = os.Getenv("JWT_SECRET")
+
+	// Initialize the logger
+	logger.NewLogger()
 }

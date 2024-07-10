@@ -1,4 +1,4 @@
-package utils
+package logger
 
 import (
 	"fmt"
@@ -40,22 +40,22 @@ func NewLogger() MyLogger {
 	return Logger
 }
 
-func (l *MyLogger) LogInfo() *zerolog.Event {
-	return l.Logger.Info()
+func LogInfo() *zerolog.Event {
+	return Logger.Info()
 }
 
-func (l *MyLogger) LogError() *zerolog.Event {
-	return l.Logger.Error()
+func LogError() *zerolog.Event {
+	return Logger.Error()
 }
 
-func (l *MyLogger) LogDebug() *zerolog.Event {
-	return l.Logger.Debug()
+func LogDebug() *zerolog.Event {
+	return Logger.Debug()
 }
 
-func (l *MyLogger) LogWarn() *zerolog.Event {
-	return l.Logger.Warn()
+func LogWarn() *zerolog.Event {
+	return Logger.Warn()
 }
 
-func (l *MyLogger) LogFatal() *zerolog.Event {
-	return l.Logger.Fatal()
+func LogFatal() *zerolog.Event {
+	return Logger.Fatal()
 }
