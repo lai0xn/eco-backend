@@ -17,6 +17,7 @@ var EMAIL_PASSWORD string
 func Load() {
 	// OAuth configuration
 	godotenv.Load()
+
 	types.OAuth2Configs = map[string]*types.OAuthProvider{
 		"google": {
 			Config: &oauth2.Config{

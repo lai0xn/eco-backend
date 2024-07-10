@@ -140,7 +140,7 @@ func (s *EventsService) CreateEvent(payload types.EventPayload) (*db.EventModel,
 		db.Event.Description.Set(payload.Description),
 		db.Event.Organizer.Link(db.Organization.ID.Equals(payload.OrgID)),
 		db.Event.Date.Set(payload.Date),
-    db.Event.Location.Set(payload.Location),
+		db.Event.Location.Set(payload.Location),
 		db.Event.Public.Set(payload.Public),
     ).With().Exec(ctx)
 	if err != nil {

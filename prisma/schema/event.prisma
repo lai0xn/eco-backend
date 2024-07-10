@@ -1,42 +1,39 @@
 model Event {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  title   String
-  description String
-  organizer  Organization @relation(fields: [organizerId], references: [id])
-  organizerId String @db.ObjectId
-  date DateTime
-  public Boolean @default(true)
-  images String[]
-  Location String
-  participantsIDs String[] @db.ObjectId
-  comments EventComment[]
-  achievments Acheivment[]
-  applications EventApplication[]
-  particapnts User[] @relation(fields:[participantsIDs],references:[id])
-  createdAt     DateTime           @default(now())
-
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  organizer       Organization       @relation(fields: [organizerId], references: [id])
+  organizerId     String             @db.ObjectId
+  date            DateTime
+  public          Boolean            @default(true)
+  images          String[]
+  Location        String
+  participantsIDs String[]           @db.ObjectId
+  comments        EventComment[]
+  achievments     Acheivment[]
+  applications    EventApplication[]
+  particapnts     User[]             @relation(fields: [participantsIDs], references: [id])
+  createdAt       DateTime           @default(now())
 }
 
 model EventComment {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  content String
-  eventId String @db.ObjectId
-  event   Event  @relation(fields: [eventId], references: [id])
-  userId  String @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id])
-  createdAt     DateTime           @default(now())
-
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  eventId   String   @db.ObjectId
+  event     Event    @relation(fields: [eventId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model EventApplication {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  eventId    String  @db.ObjectId
-  event      Event   @relation(fields: [eventId], references: [id])
-  userId     String  @db.ObjectId
-  user       User    @relation(fields: [userId], references: [id])
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  eventId    String   @db.ObjectId
+  event      Event    @relation(fields: [eventId], references: [id])
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id])
   motivation String
   Accepted   Boolean
   Extra      String?
-  createdAt     DateTime           @default(now())
-
+  createdAt  DateTime @default(now())
 }
