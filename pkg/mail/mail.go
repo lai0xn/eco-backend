@@ -1,6 +1,7 @@
 package mail
 
 import (
+	"context"
 	"crypto/rand"
 	"errors"
 	"fmt"
@@ -43,7 +44,7 @@ func (v *EmailVerifier)SendVerfication(userID string,to []string)error{
 	smtpPort := "587"
   otp := v.GenerateOTP()
   message := []byte(fmt.Sprintf("Verification code is %s",otp))
-  v.client.Set(redis.Ctx,"userOTP:"+userID,otp,time.Hour * 1)
+  v.client.Set(context.Background(),"userOTP:"+userID,otp,time.Hour * 1)
 	auth := smtp.PlainAuth("", config.EMAIL, config.EMAIL_PASSWORD, smtpHost)
 
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, config.EMAIL, to, message)
@@ -54,7 +55,7 @@ func (v *EmailVerifier)SendVerfication(userID string,to []string)error{
 }
 
 func (v *EmailVerifier)Verify(userID string,otp string)error{  
-  userOTP := v.client.Get(redis.Ctx,"userOTP:"+userID).Val()
+  userOTP := v.client.Get(context.Background(),"userOTP:"+userID).Val()
   if userOTP != otp{
     return errors.New("verification failed")
   }

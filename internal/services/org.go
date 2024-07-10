@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/lai0xn/squid-tech/pkg/logger"
+	"github.com/lai0xn/squid-tech/pkg/redis"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"github.com/lai0xn/squid-tech/prisma"
 	"github.com/lai0xn/squid-tech/prisma/db"
@@ -151,14 +152,17 @@ func (s *OrgService) Follow(userID string,orgId string) (string, error) {
 
 	}).Msg("DB Query")
 	ctx := context.Background()
-	deleted, err := prisma.Client.Organization.FindUnique(
+	org, err := prisma.Client.Organization.FindUnique(
 		db.Organization.ID.Equals(orgId),
 	).Update(db.Organization.Followers.Link(db.User.ID.Equals(userID))).Exec(ctx)
 	if err != nil {
 		return "", nil
 	}
-	fmt.Println(deleted.ID)
-	return deleted.ID, nil
+  client := redis.GetClient()
+  key := fmt.Sprintf("notifs:%s",org.OwnerID)
+  client.Publish(context.Background(),key,fmt.Sprintf("Your org %s gained a new follower",org.Name))
+	return org.ID, nil
+  
 }
 
 

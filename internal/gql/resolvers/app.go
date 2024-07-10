@@ -1,14 +1,16 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
+	"fmt"
 
 	"github.com/graphql-go/graphql"
+	t "github.com/lai0xn/squid-tech/internal/gql/types"
 	"github.com/lai0xn/squid-tech/internal/middlewares/gql"
 	"github.com/lai0xn/squid-tech/internal/services"
+	"github.com/lai0xn/squid-tech/pkg/redis"
 	"github.com/lai0xn/squid-tech/pkg/types"
-   t"github.com/lai0xn/squid-tech/internal/gql/types"
-
 )
 
 func NewAppResolver() *appResolver{
@@ -135,6 +137,9 @@ func (r *appResolver)AcceptApp(p graphql.ResolveParams) (interface{},error){
     "accepted":a.Accepted,
     "extra":ex,
   }
+  client := redis.GetClient()
+  notifMsg := fmt.Sprintf("Your application to the %s event have been accepted ",a.Event().Title)
+  client.Publish(context.Background(),fmt.Sprintf("notifs:%s",a.UserID),notifMsg)
   return app,nil
 }
 func (r *appResolver)CreateApp(p graphql.ResolveParams) (interface{},error){

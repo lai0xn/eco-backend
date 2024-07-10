@@ -44,7 +44,7 @@ func (s *AppService) AcceptApp(id string) (*db.EventApplicationModel, error) {
 
 	result, err := prisma.Client.EventApplication.FindUnique(
 		db.EventApplication.ID.Equals(id),
-	).Update(
+	).With(db.EventApplication.Event.Fetch()).Update(
 		db.EventApplication.Accepted.Set(true),
 	).Exec(ctx)
 
