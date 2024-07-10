@@ -129,7 +129,6 @@ func (s *PostService) CreatePost(userId string, content string, description stri
 		db.Post.Author.Link(db.User.ID.Equals(userId)),
 
 		// TODO: Add image upload
-		db.Post.Images.Equals(""),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err
