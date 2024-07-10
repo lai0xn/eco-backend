@@ -114,6 +114,89 @@ const docTemplate = `{
                 }
             }
         },
+        "/events/acheivment/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "create acheivment endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/types.AcheivmentPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/events/acheivment/delete/:id": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "organizations"
+                ],
+                "summary": "Delete acheivment endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/events/acheivment/get/:id": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get acheivment endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/events/create": {
             "post": {
                 "consumes": [
@@ -1029,6 +1112,23 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.AcheivmentPayload": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "eventId": {
+                    "type": "string"
+                },
+                "orgId": {
+                    "type": "string"
+                },
+                "string": {
+                    "type": "string"
+                }
+            }
+        },
         "types.CommentPayload": {
             "type": "object",
             "properties": {

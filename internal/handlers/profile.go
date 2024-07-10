@@ -35,10 +35,7 @@ func (h *profileHandler) Get(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	user.Password = ""
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Search Profile endpoint
@@ -64,9 +61,7 @@ func (h *profileHandler) Search(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Profile Image endpoint
@@ -95,9 +90,7 @@ func (h *profileHandler) ChangePfp(c echo.Context) error {
 	}
 	io.Copy(f, src)
 	_, err = h.srv.UpdateUserImage(claims.ID, path)
-	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Profile Bg Image endpoint
@@ -126,9 +119,7 @@ func (h *profileHandler) ChangeBg(c echo.Context) error {
 	}
 	io.Copy(f, src)
 	_, err = h.srv.UpdateUserBg(claims.ID, path)
-	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Update Profile endpoint
@@ -169,9 +160,7 @@ func (h *profileHandler) Update(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": payload,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Get Current Profile endpoint
@@ -188,12 +177,9 @@ func (h *profileHandler) CurrentUser(c echo.Context) error {
   if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-  p,err := h.srv.GetUser(u.ID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
 
-	return c.JSON(http.StatusOK, p)
+
+	return c.JSON(http.StatusOK, u)
 }
 
 // @Summary	Delete Profile endpoint

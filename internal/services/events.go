@@ -32,6 +32,23 @@ func (s *EventsService) GetEvent(id string) (*db.EventModel, error) {
 	return result, nil
 }
 
+
+func (s *EventsService) GetAcheivment(id string) (*db.AcheivmentModel, error) {
+	ctx := context.Background()
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "get event",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.Acheivment.FindUnique(
+		db.Acheivment.ID.Equals(id),
+	).With(db.Acheivment.Event.Fetch()).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (s *EventsService) GetEvents(page int) ([]db.EventModel, error) {
 	ctx := context.Background()
 	limit := 10

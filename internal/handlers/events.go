@@ -64,6 +64,23 @@ func (h *eventHandler) Get(c echo.Context) error {
 	return c.JSON(http.StatusOK,org)
 }
 
+// @Summary	Get acheivment endpoint
+// @Tags		events
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/events/acheivment/get/:id [get]
+func (h *eventHandler) GetAcheivment(c echo.Context) error {
+	id := c.Param("id")
+	org, err := h.srv.GetAcheivment(id)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	return c.JSON(http.StatusOK,org)
+}
+
 // @Summary	Get Post endpoint
 // @Tags		events
 // @Accept		json
@@ -144,6 +161,40 @@ func (h *eventHandler) Create(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// @Summary	create acheivment endpoint
+// @Tags		events
+// @Accept		json
+// @Produce	json
+// @Param		Authorization	header	string	true	"Bearer token"
+// @Param		body	body	types.AcheivmentPayload	false "body"	
+// @Success	200
+// @Router		/events/acheivment/create [post]
+func (h *eventHandler) CreateAcheivment(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*types.Claims)
+	var payload types.AcheivmentPayload
+	err := c.Bind(&payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+  org,err := h.osrv.GetOrg(payload.OrgID)
+  if err != nil {
+    	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+  }
+  if org.OwnerID != claims.ID {
+    	return echo.NewHTTPError(http.StatusBadRequest, errors.New("no perms to perform this action"))
+  }
+  result, err := h.srv.CreateAcheivment(payload,org.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+
+	}
+	return c.JSON(http.StatusOK, result)
+}
+
+
 // @Summary	Add Event Image endpoint
 // @Tags		events
 // @Accept		form/multipart
@@ -179,3 +230,29 @@ func (h *eventHandler) AddImage(c echo.Context) error {
 	})
 }
 
+
+// @Summary	Delete acheivment endpoint
+// @Tags		organizations
+// @Accept		json
+// @Produce	json
+// @Param		Authorization	header	string	true	"Bearer token"
+// @Success	200
+// @Router		/events/acheivment/delete/:id [delete]
+func (h *eventHandler) DeleteAcheivment(c echo.Context) error {
+  id := c.Param("id")
+  u := c.Get("user").(*jwt.Token)
+  claims := u.Claims.(*types.Claims)
+  acheivment,err := h.srv.GetAcheivment(id)
+  if err != nil {
+     return echo.NewHTTPError(http.StatusBadRequest,err)
+  }
+  if acheivment.OrgID != claims.ID {
+    return echo.NewHTTPError(http.StatusUnauthorized,errors.New("no authorized to do this action"))
+  }
+
+	deleted_id, err := h.srv.DeleteAcheivment(id)
+  if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, deleted_id)
+}

@@ -15,4 +15,5 @@ type AcheivmentPayload struct {
   Title string `json:"string"`
   Details string `json:"details"`
   EventID string `json:"eventId"`
+  OrgID string `json:"orgId"`
 }
