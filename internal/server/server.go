@@ -4,9 +4,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/lai0xn/squid-tech/internal/gql"
-	"github.com/lai0xn/squid-tech/internal/middlewares/rest"
+	middlewares "github.com/lai0xn/squid-tech/internal/middlewares/rest"
 	"github.com/lai0xn/squid-tech/internal/router"
-	"github.com/lai0xn/squid-tech/pkg/utils"
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -33,16 +33,14 @@ func (s *Server) Setup(e *echo.Echo) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
-	// Logger
-	utils.NewLogger()
+	// logging middleware
 	e.Use(middlewares.LoggingMiddleware)
 }
 
 func (s *Server) Run() {
 	e := echo.New()
 	s.Setup(e)
-  utils.Logger.LogInfo().Msg("graphql server running on port 5000") 
-  go gql.Execute()
-	utils.Logger.LogInfo().Msg(e.Start(s.PORT).Error())
-
+	logger.LogInfo().Msg("graphql server running on port 5000")
+	go gql.Execute()
+	logger.LogInfo().Msg(e.Start(s.PORT).Error())
 }

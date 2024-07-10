@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
-	"github.com/lai0xn/squid-tech/pkg/utils"
 	"github.com/lai0xn/squid-tech/prisma"
 	"github.com/lai0xn/squid-tech/prisma/db"
 )
@@ -18,26 +18,25 @@ func NewPostService() *PostService {
 
 func (s *PostService) GetPost(id string) (*db.PostModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get event",
 		"params": id,
 	}).Msg("DB Query")
 
 	result, err := prisma.Client.Post.FindUnique(
 		db.Post.ID.Equals(id),
-	).With(db.Post.Author.Fetch(),db.Post.Comments.Fetch()).Exec(ctx)
-  result.Author().Password = ""
-  result.Author().EventsIds = nil
+	).With(db.Post.Author.Fetch(), db.Post.Comments.Fetch()).Exec(ctx)
+	result.Author().Password = ""
+	result.Author().EventsIds = nil
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-
-func (s *PostService) UploadImage(id string,path string) (*db.PostModel, error) {
+func (s *PostService) UploadImage(id string, path string) (*db.PostModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "upload image post",
 		"params": id,
 	}).Msg("DB Query")
@@ -53,25 +52,23 @@ func (s *PostService) UploadImage(id string,path string) (*db.PostModel, error) 
 
 func (s *PostService) GetPosts(page int) ([]db.PostModel, error) {
 	ctx := context.Background()
-  limit := 10
-	result, err := prisma.Client.Post.FindMany().Skip((page-1)*limit).Take(limit).With(db.Post.Author.Fetch(),db.Post.Comments.Fetch()).Exec(ctx)
+	limit := 10
+	result, err := prisma.Client.Post.FindMany().Skip((page-1)*limit).Take(limit).With(db.Post.Author.Fetch(), db.Post.Comments.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-  for _,r := range result {
-       r.Author().Password = ""
-       r.Author().EventsIds = nil
+	for _, r := range result {
+		r.Author().Password = ""
+		r.Author().EventsIds = nil
 
-  }
+	}
 
 	return result, nil
 }
 
-
-
 func (s *PostService) GetComment(id string) (*db.PostCommentModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "get event",
 		"params": id,
 	}).Msg("DB Query")
@@ -82,22 +79,21 @@ func (s *PostService) GetComment(id string) (*db.PostCommentModel, error) {
 	if err != nil {
 		return nil, err
 	}
-  
+
 	return result, nil
 }
 
-
 func (s *PostService) SearchPost(name string) ([]db.PostModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "search event",
 		"params": name,
 	}).Msg("DB Query")
 	result, err := prisma.Client.Post.FindMany(
 		db.Post.Or(
-        db.Post.Content.Contains(name),
-        db.Post.Description.Contains(name),
-    ),
+			db.Post.Content.Contains(name),
+			db.Post.Description.Contains(name),
+		),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err
@@ -107,7 +103,7 @@ func (s *PostService) SearchPost(name string) ([]db.PostModel, error) {
 
 func (s *PostService) UpdatePost(id string, payload types.PostPayload) (*db.PostModel, error) {
 	ctx := context.Background()
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "update org",
 		"id":     id,
 		"params": payload,
@@ -124,14 +120,14 @@ func (s *PostService) UpdatePost(id string, payload types.PostPayload) (*db.Post
 	return results, nil
 }
 
-func (s *PostService) CreatePost(userId string,content string, description string) (*db.PostModel, error) {
+func (s *PostService) CreatePost(userId string, content string, description string) (*db.PostModel, error) {
 
 	ctx := context.Background()
 	results, err := prisma.Client.Post.CreateOne(
 		db.Post.Content.Set(content),
 		db.Post.Description.Set(description),
-    db.Post.Author.Link(db.User.ID.Equals(userId)),
-
+		// TODO: Add image
+		db.Post.Author.Link(db.User.ID.Equals(userId)), db.Post.Images.Equals(""),
 	).Exec(ctx)
 
 	if err != nil {
@@ -140,14 +136,13 @@ func (s *PostService) CreatePost(userId string,content string, description strin
 	return results, nil
 }
 
-func (s *PostService) CreateComment(userId string,postID,content string) (*db.PostCommentModel, error) {
+func (s *PostService) CreateComment(userId string, postID, content string) (*db.PostCommentModel, error) {
 
 	ctx := context.Background()
 	results, err := prisma.Client.PostComment.CreateOne(
 		db.PostComment.Content.Set(content),
-    db.PostComment.Author.Link(db.User.ID.Equals(userId)),
-    db.PostComment.Post.Link(db.Post.ID.Equals(postID)),
-
+		db.PostComment.Author.Link(db.User.ID.Equals(userId)),
+		db.PostComment.Post.Link(db.Post.ID.Equals(postID)),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err
@@ -158,7 +153,7 @@ func (s *PostService) CreateComment(userId string,postID,content string) (*db.Po
 func (s *PostService) DeleteComment(id string) (*db.PostCommentModel, error) {
 	ctx := context.Background()
 	results, err := prisma.Client.PostComment.FindUnique(
-    db.PostComment.ID.Equals(id),
+		db.PostComment.ID.Equals(id),
 	).Delete().Exec(ctx)
 	if err != nil {
 		return nil, err
@@ -166,33 +161,24 @@ func (s *PostService) DeleteComment(id string) (*db.PostCommentModel, error) {
 	return results, nil
 }
 
-
-
-
-func (s *PostService) CommentPost(postid string, userid string,content string) (*db.PostCommentModel, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
-		"query":   "create event",
+func (s *PostService) CommentPost(postid string, userid string, content string) (*db.PostCommentModel, error) {
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event",
 	}).Msg("DB Query")
 	ctx := context.Background()
 	results, err := prisma.Client.PostComment.CreateOne(
 		db.PostComment.Content.Set(content),
-    db.PostComment.Author.Link(db.User.ID.Equals(userid)),
-    db.PostComment.Post.Link(db.Post.ID.Equals(postid)),
+		db.PostComment.Author.Link(db.User.ID.Equals(userid)),
+		db.PostComment.Post.Link(db.Post.ID.Equals(postid)),
 	).Exec(ctx)
-  if err != nil {
-    return nil,err
-  }
-  return results, nil
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }
 
-
-
-
-
-
-
 func (s *PostService) DeletePost(id string) (string, error) {
-	utils.Logger.LogInfo().Fields(map[string]interface{}{
+	logger.LogInfo().Fields(map[string]interface{}{
 		"query":  "delete org",
 		"params": id,
 	}).Msg("DB Query")
@@ -206,5 +192,3 @@ func (s *PostService) DeletePost(id string) (string, error) {
 	fmt.Println(deleted.ID)
 	return deleted.ID, nil
 }
-
-
