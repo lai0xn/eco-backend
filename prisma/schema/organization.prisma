@@ -7,6 +7,8 @@ model Organization {
   ownerId     String   @db.ObjectId
   owner       User     @relation(fields: [ownerId], references: [id])
   eventsIds   String[]
+  followers User[]  @relation("orgfollowers",fields: [followersIds], references: [id])
+  followersIds String[] @db.ObjectId
   acheivments Acheivment[]
   events      Event[]
 }

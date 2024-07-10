@@ -13,7 +13,9 @@ model User {
   eventComments EventComment[]
   postsComments PostComment[]
   posts Post[]
-  badges Badge[] 
+  badges Badge[]
+  following Organization[]  @relation("orgfollowers",fields: [followingIds], references: [id])
+  followingIds String[] @db.ObjectId
   applications EventApplication[]
   Organizations Organization[]
   eventsIds     String[]           @db.ObjectId
