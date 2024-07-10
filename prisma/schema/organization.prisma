@@ -11,4 +11,6 @@ model Organization {
   followersIds String[] @db.ObjectId
   acheivments Acheivment[]
   events      Event[]
+  createdAt     DateTime           @default(now())
+
 }

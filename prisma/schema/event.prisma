@@ -13,6 +13,8 @@ model Event {
   achievments Acheivment[]
   applications EventApplication[]
   particapnts User[] @relation(fields:[participantsIDs],references:[id])
+  createdAt     DateTime           @default(now())
+
 }
 
 model EventComment {
@@ -22,6 +24,8 @@ model EventComment {
   event   Event  @relation(fields: [eventId], references: [id])
   userId  String @db.ObjectId
   user    User   @relation(fields: [userId], references: [id])
+  createdAt     DateTime           @default(now())
+
 }
 
 model EventApplication {
@@ -33,4 +37,6 @@ model EventApplication {
   motivation String
   Accepted   Boolean
   Extra      String?
+  createdAt     DateTime           @default(now())
+
 }

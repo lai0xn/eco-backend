@@ -3,6 +3,7 @@ package resolvers
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/graphql-go/graphql"
@@ -29,6 +30,8 @@ func(r *eventResolver) hasPerm(p graphql.ResolveParams)error{
    orgId := p.Args["organizationId"].(string)
    u := p.Context.Value("user")
    if u == nil {
+    log.Println(orgId)
+
     return errors.New("Not Authorized")
    }
    user := u.(*types.Claims)
@@ -191,7 +194,7 @@ func (r *eventResolver)JoinEvent(p graphql.ResolveParams) (interface{},error){
 
 func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if err := r.hasPerm(p);err!= nil {
-    return nil,errors.New("Access Denied")
+    return nil,err
   }
   title,ok := p.Args["title"].(string)
   if !ok {
@@ -213,7 +216,7 @@ func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
-  location,ok := p.Args["locatiom"].(string)
+  location,ok := p.Args["location"].(string)
   if !ok {
     return nil ,errors.New("No Args Provided")
   }

@@ -7,6 +7,7 @@ model Post {
    createdAt   DateTime      @default(now())
    comments    PostComment[]
    image      String?
+
 }
 
 model PostComment {
@@ -17,4 +18,5 @@ model PostComment {
    authorId  String   @db.ObjectId
    post      Post     @relation(fields: [postId], references: [id])
    postId    String   @db.ObjectId
+
 }

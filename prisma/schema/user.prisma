@@ -9,6 +9,7 @@ model User {
   phone         String?
   bg_img        String
   Adress        String?
+  Links          String?
   events        Event[]            @relation(fields: [eventsIds], references: [id])
   eventComments EventComment[]
   postsComments PostComment[]
