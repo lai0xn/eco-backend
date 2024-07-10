@@ -1,0 +1,12 @@
+model Acheivment {
+    id      String  @id @default(auto()) @map("_id") @db.ObjectId
+    name    String
+    details String
+    eventID String
+    event   Event @relation(fields:[eventID],references:[id])
+
+}
+
+enum Badge {
+  STARTER
+}

@@ -13,6 +13,7 @@ model User {
   eventComments EventComment[]
   postsComments PostComment[]
   posts Post[]
+  badges Badge[] 
   applications EventApplication[]
   Organizations Organization[]
   eventsIds String[] @db.ObjectId

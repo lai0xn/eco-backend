@@ -7,8 +7,10 @@ model Event {
   date DateTime
   public Boolean @default(true)
   images String[]
+  Location String
   participantsIDs String[] @db.ObjectId
   comments EventComment[]
+  achievments Acheivment[]
   applications EventApplication[]
   particapnts User[] @relation(fields:[participantsIDs],references:[id])
 }
