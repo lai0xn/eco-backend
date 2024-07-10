@@ -2,9 +2,9 @@ package redis
 
 import (
 	"context"
-	"log"
 	"os"
 
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -16,14 +16,13 @@ func Connect() {
 		Addr:     os.Getenv("REDIS_ADDR"),
 		Password: os.Getenv("REDIS_PASSWORD"),
 		Username: os.Getenv("REDIS_USERNAME"),
-		
 	})
 
 	_, err := client.Ping(ctx).Result()
 	if err != nil {
-		log.Fatalf("Could not connect to Redis: %v", err)
+		logger.Logger.Err(err)
 	}
-	log.Println("Connected to Redis successfully!")
+	logger.Logger.Info().Msg("Connected to Redis successfully!")
 }
 
 func GetClient() *redis.Client {

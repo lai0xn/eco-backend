@@ -16,6 +16,7 @@ var JWT_SECRET string
 func Load() {
 	// OAuth configuration
 	godotenv.Load()
+
 	types.OAuth2Configs = map[string]*types.OAuthProvider{
 		"google": {
 			Config: &oauth2.Config{

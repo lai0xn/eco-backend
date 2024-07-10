@@ -17,8 +17,8 @@ var (
 
 func init() {
 	//Initialize the middlware
-  config.Load()
-  fmt.Println(config.JWT_SECRET)
+	config.Load()
+	fmt.Println(config.JWT_SECRET)
 	jwtMiddelware = echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte(config.JWT_SECRET),
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
@@ -37,6 +37,6 @@ func SetRoutes(e *echo.Echo) {
 	profileRoutes(v1)
 	orgsRoutes(v1)
 	OAuthRoutes(v1)
-  eventRoutes(v1)
-  postRoutes(v1)
+	eventRoutes(v1)
+	postRoutes(v1)
 }

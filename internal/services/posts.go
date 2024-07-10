@@ -126,10 +126,11 @@ func (s *PostService) CreatePost(userId string, content string, description stri
 	results, err := prisma.Client.Post.CreateOne(
 		db.Post.Content.Set(content),
 		db.Post.Description.Set(description),
-		// TODO: Add image
 		db.Post.Author.Link(db.User.ID.Equals(userId)),
-	).Exec(ctx)
 
+		// TODO: Add image upload
+		db.Post.Images.Equals(""),
+	).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}

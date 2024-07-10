@@ -13,18 +13,6 @@ model Event {
   achievments Acheivment[]
   applications EventApplication[]
   particapnts User[] @relation(fields:[participantsIDs],references:[id])
-  id              String             @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  description     String
-  organizer       Organization       @relation(fields: [organizerId], references: [id])
-  organizerId     String             @db.ObjectId
-  date            DateTime
-  public          Boolean            @default(true)
-  images          String[]
-  participantsIDs String[]           @db.ObjectId
-  comments        EventComment[]
-  applications    EventApplication[]
-  particapnts     User[]             @relation(fields: [participantsIDs], references: [id])
 }
 
 model EventComment {
