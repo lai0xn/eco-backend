@@ -6,17 +6,20 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/lai0xn/squid-tech/internal/services"
+	"github.com/lai0xn/squid-tech/pkg/mail"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"github.com/lai0xn/squid-tech/pkg/utils"
 )
 
 type authHandler struct {
 	srv *services.AuthService
+  verifier *mail.EmailVerifier
 }
 
 func NewAuthHandler() *authHandler {
 	return &authHandler{
 		srv: services.NewAuthService(),
+    verifier: mail.NewVerifier(),
 	}
 }
 
@@ -71,10 +74,37 @@ func (h *authHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, utils.NewValidationError(e))
 	}
 	//TODO: fix gender
-	if err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, false); err != nil {
+	user,err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, false)
+  if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"message": "user created successfully",
-	})
+  err = h.verifier.SendVerfication(user.ID,[]string{user.Email})
+  if err != nil {
+    return echo.NewHTTPError(http.StatusBadRequest,err)
+  }
+	return c.JSON(http.StatusOK,"user created and verification sent")
+}
+
+
+
+
+// Email verification example
+//
+//	@Summary	Verification endpoint
+//	@Tags		auth
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		query		string	true	"userid"
+//	@Param		id		otp		string	true	"otp"
+//	@Router		/auth/verify [post]
+func (h *authHandler) VerifyUser(c echo.Context) error {
+  id := c.QueryParam("id")
+  otp := c.QueryParam("otp")
+  if err := h.verifier.Verify(id,otp);err!= nil {
+    return echo.NewHTTPError(http.StatusBadRequest,err)
+  }
+  if err := h.srv.ActivateUser(id);err!=nil{
+     return echo.NewHTTPError(http.StatusBadRequest,err)
+  }
+	return c.JSON(http.StatusOK,"verification successfull")
 }

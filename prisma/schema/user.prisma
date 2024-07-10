@@ -14,6 +14,7 @@ model User {
   eventComments EventComment[]
   postsComments PostComment[]
   posts Post[]
+  active Boolean @default(false)
   badges Badge[]
   following Organization[]  @relation("orgfollowers",fields: [followingIds], references: [id])
   followingIds String[] @db.ObjectId
