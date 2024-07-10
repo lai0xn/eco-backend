@@ -67,25 +67,6 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/event/event/get/:id": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "events"
-                ],
-                "summary": "Get event endpoint",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/events": {
             "get": {
                 "consumes": [
@@ -261,6 +242,25 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/events/event/get/:id": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get event endpoint",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -1238,6 +1238,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
+                    "type": "string"
+                },
+                "links": {
                     "type": "string"
                 },
                 "name": {

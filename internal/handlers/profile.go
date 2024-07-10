@@ -142,12 +142,21 @@ func (h *profileHandler) Update(c echo.Context) error {
 	if !ok {
 		adress = ""
 	}
+  links, ok := u.ExternalLinks()
+	if !ok {
+		adress = ""
+	}
+  phone, ok := u.Phone()
+	if !ok {
+		adress = ""
+	}
 	var payload = types.ProfileUpdate{
 		Email:  claims.Email,
 		Name:   claims.Name,
 		Bio:    u.Bio,
-		Phone:  u.Password,
+		Phone:  phone,
 		Adress: adress,
+    Links: links,
 	}
 	err = c.Bind(&payload)
 	if err != nil {
@@ -155,12 +164,12 @@ func (h *profileHandler) Update(c echo.Context) error {
 
 	}
 	fmt.Println(payload)
-	_, err = h.srv.UpdateUser(claims.ID, payload)
+  updated, err := h.srv.UpdateUser(claims.ID, payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, updated)
 }
 
 // @Summary	Get Current Profile endpoint

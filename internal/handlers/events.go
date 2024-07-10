@@ -52,7 +52,7 @@ func (h *eventHandler)hasPerm(c echo.Context) (*db.EventModel, error) {
 // @Accept		json
 // @Produce	json
 // @Success	200
-// @Router		/event/event/get/:id [get]
+// @Router		/events/event/get/:id [get]
 func (h *eventHandler) Get(c echo.Context) error {
 	id := c.Param("id")
 	org, err := h.srv.GetEvent(id)
