@@ -3,6 +3,7 @@ package resolvers
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/graphql-go/graphql"
@@ -29,6 +30,8 @@ func(r *eventResolver) hasPerm(p graphql.ResolveParams)error{
    orgId := p.Args["organizationId"].(string)
    u := p.Context.Value("user")
    if u == nil {
+    log.Println(orgId)
+
     return errors.New("Not Authorized")
    }
    user := u.(*types.Claims)
@@ -90,7 +93,7 @@ func (r *eventResolver)Event(p graphql.ResolveParams) (interface{},error){
   if err != nil {
     return nil,err
   }
-  event := t.EventFromModel(e)
+  event := t.EventToStruct(e) 
   return event,nil
 }
 
@@ -105,7 +108,7 @@ func (r *eventResolver)GetEvents(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   return events,nil
@@ -122,7 +125,7 @@ func (r *eventResolver)SearchEvent(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   return events,nil
@@ -139,7 +142,7 @@ func (r *eventResolver)OrgEvents(p graphql.ResolveParams) (interface{},error){
   }
   var events []t.Event
   for _,event := range e {
-    n := t.EventFromModel(&event)
+    n := t.EventToStruct(&event)
     events = append(events, n)
   }
   fmt.Println(e)
@@ -191,7 +194,7 @@ func (r *eventResolver)JoinEvent(p graphql.ResolveParams) (interface{},error){
 
 func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if err := r.hasPerm(p);err!= nil {
-    return nil,errors.New("Access Denied")
+    return nil,err
   }
   title,ok := p.Args["title"].(string)
   if !ok {
@@ -213,16 +216,22 @@ func (r *eventResolver)CreateEvent(p graphql.ResolveParams) (interface{},error){
   if !ok {
     return nil ,errors.New("No Args Provided")
   }
-  event,err := r.srv.CreateEvent(orgID,types.EventPayload{
+  location,ok := p.Args["location"].(string)
+  if !ok {
+    return nil ,errors.New("No Args Provided")
+  }
+  e,err := r.srv.CreateEvent(types.EventPayload{
     Title:title,
     Description: description,
     Public: public,
     Date: date,
+    OrgID: orgID,
+    Location: location,
   })
   if err != nil {
     return nil,err
   }
-  return event.ID,nil
+  return e.ID,nil
 }
 
 

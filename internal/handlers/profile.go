@@ -35,10 +35,7 @@ func (h *profileHandler) Get(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	user.Password = ""
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Search Profile endpoint
@@ -64,9 +61,7 @@ func (h *profileHandler) Search(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Profile Image endpoint
@@ -95,9 +90,7 @@ func (h *profileHandler) ChangePfp(c echo.Context) error {
 	}
 	io.Copy(f, src)
 	_, err = h.srv.UpdateUserImage(claims.ID, path)
-	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Profile Bg Image endpoint
@@ -126,9 +119,7 @@ func (h *profileHandler) ChangeBg(c echo.Context) error {
 	}
 	io.Copy(f, src)
 	_, err = h.srv.UpdateUserBg(claims.ID, path)
-	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Update Profile endpoint
@@ -151,12 +142,21 @@ func (h *profileHandler) Update(c echo.Context) error {
 	if !ok {
 		adress = ""
 	}
+  links, ok := u.ExternalLinks()
+	if !ok {
+		adress = ""
+	}
+  phone, ok := u.Phone()
+	if !ok {
+		adress = ""
+	}
 	var payload = types.ProfileUpdate{
 		Email:  claims.Email,
 		Name:   claims.Name,
 		Bio:    u.Bio,
-		Phone:  u.Password,
+		Phone:  phone,
 		Adress: adress,
+    Links: links,
 	}
 	err = c.Bind(&payload)
 	if err != nil {
@@ -164,14 +164,12 @@ func (h *profileHandler) Update(c echo.Context) error {
 
 	}
 	fmt.Println(payload)
-	_, err = h.srv.UpdateUser(claims.ID, payload)
+  updated, err := h.srv.UpdateUser(claims.ID, payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": payload,
-	})
+	return c.JSON(http.StatusOK, updated)
 }
 
 // @Summary	Get Current Profile endpoint
@@ -185,18 +183,12 @@ func (h *profileHandler) CurrentUser(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*types.Claims)
 	u, err := h.srv.GetUser(claims.ID)
-	if err != nil {
+  if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"user": types.Response{
-			"id":    claims.ID,
-			"name":  claims.Name,
-			"email": claims.Email,
-			"bio":   u.Bio,
-		},
-	})
+
+	return c.JSON(http.StatusOK, u)
 }
 
 // @Summary	Delete Profile endpoint

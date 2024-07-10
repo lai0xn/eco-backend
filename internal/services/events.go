@@ -25,7 +25,24 @@ func (s *EventsService) GetEvent(id string) (*db.EventModel, error) {
 
 	result, err := prisma.Client.Event.FindUnique(
 		db.Event.ID.Equals(id),
-	).With(db.Event.Organizer.Fetch(), db.Event.Particapnts.Fetch()).Exec(ctx)
+	).With(db.Event.Organizer.Fetch(), db.Event.Particapnts.Fetch(),db.Event.Achievments.Fetch()).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+
+func (s *EventsService) GetAcheivment(id string) (*db.AcheivmentModel, error) {
+	ctx := context.Background()
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "get event",
+		"params": id,
+	}).Msg("DB Query")
+
+	result, err := prisma.Client.Acheivment.FindUnique(
+		db.Acheivment.ID.Equals(id),
+	).With(db.Acheivment.Event.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -112,21 +129,20 @@ func (s *EventsService) UpdateEvent(id string, payload types.EventPayload) (*db.
 	return results, nil
 }
 
-func (s *EventsService) CreateEvent(id string, payload types.EventPayload) (*db.EventModel, error) {
+func (s *EventsService) CreateEvent(payload types.EventPayload) (*db.EventModel, error) {
 	logger.LogInfo().Fields(map[string]interface{}{
 		"query":   "create org",
-		"ownerId": id,
 		"params":  payload,
 	}).Msg("DB Query")
 	ctx := context.Background()
 	results, err := prisma.Client.Event.CreateOne(
 		db.Event.Title.Set(payload.Title),
 		db.Event.Description.Set(payload.Description),
-		db.Event.Organizer.Link(db.Organization.ID.Equals(id)),
+		db.Event.Organizer.Link(db.Organization.ID.Equals(payload.OrgID)),
 		db.Event.Date.Set(payload.Date),
 		db.Event.Location.Set(payload.Location),
 		db.Event.Public.Set(payload.Public),
-	).Exec(ctx)
+    ).With().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -143,6 +159,39 @@ func (s *EventsService) CommentEvent(eventid string, userid string, content stri
 		db.EventComment.Event.Link(db.Event.ID.Equals(eventid)),
 		db.EventComment.User.Link(db.User.ID.Equals(userid)),
 	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+func (s *EventsService) CreateAcheivment(payload types.AcheivmentPayload,orgId string)(*db.AcheivmentModel, error) {
+  
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event",
+	}).Msg("DB Query")
+	ctx := context.Background()
+	results, err := prisma.Client.Acheivment.CreateOne(
+		db.Acheivment.Name.Set(payload.Title),
+		db.Acheivment.Details.Set(payload.Details),
+    db.Acheivment.Org.Link(db.Organization.ID.Equals(orgId)),
+		db.Acheivment.Event.Link(db.Event.ID.Equals(payload.EventID)),
+	).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+func (s *EventsService) DeleteAcheivment(id string)(*db.AcheivmentModel, error) {
+  
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query": "create event",
+	}).Msg("DB Query")
+	ctx := context.Background()
+	results,err := prisma.Client.Acheivment.FindUnique(
+    db.Acheivment.ID.Equals(id),
+		).Delete().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -16,11 +16,13 @@ import (
 
 type orgHandler struct {
 	srv *services.OrgService
+  usrv *services.ProfileService
 }
 
 func NewOrgHandler() *orgHandler {
 	return &orgHandler{
 		srv: services.NewOrgService(),
+    usrv:services.NewProfileService(),
 	}
 }
 
@@ -53,9 +55,48 @@ func (h *orgHandler) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"org": org,
-	})
+	return c.JSON(http.StatusOK, org)
+}
+
+// @Summary	Follow Organization endpoint
+// @Tags		organizations
+// @Accept		json
+// @Produce	json
+// @Param		Authorization	header	string	true	"Bearer token"
+// @Success	200
+// @Router		/organizations/org/follow/:id [get]
+func (h *orgHandler) FollowHandler(c echo.Context) error {
+	id := c.Param("id")
+  u := c.Get("user").(*jwt.Token)
+  claims := u.Claims.(*types.Claims)
+  user,err := h.usrv.GetUser(claims.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+  var follower bool = false
+  for _,orgID:= range user.FollowingIds{
+    if orgID == id{
+      follower = true
+    }
+  }
+  if follower == true {
+    res,err := h.srv.Unfollow(claims.ID,id)
+    if err != nil {
+      return c.JSON(http.StatusBadRequest,err)
+    }
+    return c.JSON(http.StatusOK,types.Response{
+      "message":"unfollowed org :" + res, 
+    })
+  }else {
+    res,err := h.srv.Follow(claims.ID,id)
+    if err != nil {
+      return c.JSON(http.StatusBadRequest,err)
+    }
+    return c.JSON(http.StatusOK,types.Response{
+      "message":"followed org" + res,
+    })
+  }
+
 }
 
 // @Summary	Search Organization endpoint
@@ -74,9 +115,7 @@ func (h *orgHandler) Search(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, types.Response{
-		"user": user,
-	})
+	return c.JSON(http.StatusOK, user)
 }
 
 // @Summary	Change Organization Image endpoint
@@ -136,7 +175,7 @@ func (h *orgHandler) ChangeBg(c echo.Context) error {
 	io.Copy(f, src)
 	_, err = h.srv.UpdateOrgBg(org.ID, path)
 	return c.JSON(http.StatusOK, types.Response{
-		"user": path,
+		"img": path,
 	})
 }
 

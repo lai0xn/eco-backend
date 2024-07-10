@@ -16,18 +16,14 @@ func NewAuthService() *AuthService {
 	return &AuthService{}
 }
 
-func (s *AuthService) CreateUser(name string, email string, password string, gender bool) error {
-	ctx := context.Background()
-	client := db.NewClient()
-	if err := client.Prisma.Connect(); err != nil {
-		return err
-	}
+func (s *AuthService) CreateUser(name string, email string, password string, gender bool) (*db.UserModel,error){
+  ctx := context.Background() 
 
 	encrypted_password, err := utils.Encrypt(password)
 	if err != nil {
-		return err
+		return nil,err
 	}
-	_, err = client.User.CreateOne(
+   result, err := prisma.Client.User.CreateOne(
 		db.User.Email.Set(email),
 		db.User.Name.Set(name),
 		db.User.Bio.Set(""),
@@ -37,9 +33,9 @@ func (s *AuthService) CreateUser(name string, email string, password string, gen
 		db.User.BgImg.Set("uploads/bgs/default.jpg"),
 	).Exec(ctx)
 	if err != nil {
-		return err
+		return nil,err
 	}
-	return nil
+	return result,nil
 
 }
 
@@ -84,4 +80,18 @@ func (s *AuthService) GetUserByEmail(email string) (*db.UserModel, error) {
 	}
 
 	return user, nil // User found
+}
+
+func (s *AuthService)ActivateUser(userID string) error {
+  ctx := context.Background()
+
+  _,err := prisma.Client.User.FindUnique(
+    db.User.ID.Equals(userID),
+    ).Update(
+    db.User.Active.Set(true),
+    ).Exec(ctx)
+  if err != nil {
+    return err
+  }
+  return nil
 }

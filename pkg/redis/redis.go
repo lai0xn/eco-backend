@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var ctx = context.Background()
+var Ctx = context.TODO()
 var client *redis.Client
 
 func Connect() {
@@ -18,7 +18,7 @@ func Connect() {
 		Username: os.Getenv("REDIS_USERNAME"),
 	})
 
-	_, err := client.Ping(ctx).Result()
+	_, err := client.Ping(Ctx).Result()
 	if err != nil {
 		logger.Logger.Err(err)
 	}

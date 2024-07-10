@@ -24,7 +24,7 @@ func (s *ProfileService) GetUser(id string) (*db.UserModel, error) {
 	ctx := context.Background()
 	user, err := prisma.Client.User.FindUnique(
 		db.User.ID.Equals(id),
-	).Omit(db.User.Password.Field()).Exec(ctx)
+	).Omit(db.User.Password.Field()).With(db.User.Events.Fetch(),db.User.Posts.Fetch(),db.User.Following.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -73,12 +73,13 @@ func (s *ProfileService) UpdateUser(id string, payload types.ProfileUpdate) (*db
 	ctx := context.Background()
 	users, err := prisma.Client.User.FindUnique(
 		db.User.ID.Equals(id),
-	).Update(
+	).Omit(db.User.Password.Field()).Update(
 		db.User.Email.Set(payload.Email),
 		db.User.Name.Set(payload.Name),
 		db.User.Bio.Set(payload.Bio),
 		db.User.Adress.Set(payload.Adress),
 		db.User.Phone.Set(payload.Phone),
+    db.User.ExternalLinks.Set(payload.Links),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err

@@ -3,6 +3,8 @@ model Acheivment {
     name    String
     details String
     eventID String
+    orgID   String @db.ObjectId
+    org     Organization  @relation(fields:[orgID],references:[id]) 
     event   Event @relation(fields:[eventID],references:[id])
 
 }

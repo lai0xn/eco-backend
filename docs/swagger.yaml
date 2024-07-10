@@ -1,10 +1,36 @@
 basePath: /api/v1
 definitions:
+  types.AcheivmentPayload:
+    properties:
+      details:
+        type: string
+      eventId:
+        type: string
+      orgId:
+        type: string
+      string:
+        type: string
+    type: object
   types.CommentPayload:
     properties:
       content:
         type: string
-      postID:
+      postId:
+        type: string
+    type: object
+  types.EventPayload:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      orgId:
+        type: string
+      public:
+        type: boolean
+      title:
         type: string
     type: object
   types.LoginPayload:
@@ -38,6 +64,8 @@ definitions:
       bio:
         type: string
       email:
+        type: string
+      links:
         type: string
       name:
         type: string
@@ -101,6 +129,100 @@ paths:
       summary: Registration endpoint
       tags:
       - auth
+  /events:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: "1"
+        in: query
+        name: page
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Post endpoint
+      tags:
+      - events
+  /events/acheivment/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/types.AcheivmentPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: create acheivment endpoint
+      tags:
+      - events
+  /events/acheivment/delete/:id:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete acheivment endpoint
+      tags:
+      - organizations
+  /events/acheivment/get/:id:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get acheivment endpoint
+      tags:
+      - events
+  /events/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/types.EventPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: create event endpoint
+      tags:
+      - events
   /events/event/:id/upload:
     post:
       consumes:
@@ -122,6 +244,37 @@ paths:
         "200":
           description: OK
       summary: Add Event Image endpoint
+      tags:
+      - events
+  /events/event/get/:id:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get event endpoint
+      tags:
+      - events
+  /events/event/search:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: jhon doe org
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Search event endpoint
       tags:
       - events
   /oauth/facebook/callback:
@@ -275,6 +428,24 @@ paths:
         "200":
           description: OK
       summary: Delete Organization endpoint
+      tags:
+      - organizations
+  /organizations/org/follow/:id:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Follow Organization endpoint
       tags:
       - organizations
   /organizations/org/get/:id:

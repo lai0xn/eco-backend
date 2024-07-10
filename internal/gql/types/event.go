@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/graphql-go/graphql"
@@ -83,9 +84,18 @@ var EventCreationArgs  = graphql.FieldConfigArgument{
   "organizationId":&graphql.ArgumentConfig{
     Type: graphql.String,
   },
+  "location":&graphql.ArgumentConfig{
+    Type: graphql.String,
+  },
 }
 
 
+
+type Acheivment struct {
+  ID string `json:"id"`
+  Name string `json:"title"`
+  Description string `json:"description"`
+}
 
 
 type Event struct {
@@ -98,6 +108,7 @@ type Event struct {
   Particapants []User `json:"participants"`
   Images []string `json:"images"`
   Organization Organization `json:"organization"`
+  Acheivments []Acheivment
 }
 
 type Organization struct {
@@ -108,54 +119,29 @@ type Organization struct {
   OwnerID string `json:"OwnerID"`
 }
 
-
-
-
-func EventFromModel(m *db.EventModel)Event{
-  p := m.Particapnts()
-  var participants []User 
-  for _,pr := range p {
-      var phone string
-      var address string
-      phone,ok := pr.Phone()
-      if !ok {
-        phone = "" 
-      }
-      address,ok = pr.Adress()
-
-      if !ok {
-         address = ""
-      }
-
-      participant := User{
-      ID: pr.ID,
-      Name: pr.Name,
-      Phone: phone,
-      Address: address,
-      Email: pr.Email,
-      Image: pr.Image,
-      Joined: pr.CreatedAt,
-      Gender: pr.Gender,
-      }
-      participants = append(participants,participant)
-  }
-  org := Organization{
-    ID: m.OrganizerID,
-    Name: m.Organizer().Name,
-    Description: m.Organizer().Description,
-    Image: m.Organizer().Image,
-    OwnerID: m.Organizer().OwnerID,
-    
-  }
-  return Event{
-    ID:m.ID,
-    Title: m.Title,
-    Description: m.Description,
-    Public: m.Public,
-    Date: m.Date,
+func EventToStruct(e *db.EventModel)Event {
+  var acheivments []Acheivment
+  var participants []User
+  var org Organization
+  eventJson,_ := json.Marshal(e)
+  acheivmentsJson,_ := json.Marshal(e.Achievments())
+  orgJson,_ := json.Marshal(e.Organizer())
+  participantsJson,_ := json.Marshal(e.Particapnts())
+  json.Unmarshal(orgJson,&org)
+  json.Unmarshal(participantsJson,&participants)
+  json.Unmarshal(acheivmentsJson,&acheivments)
+  var event = Event {
     Organization:org,
-    OrganizationId: m.OrganizerID,
+    Acheivments: acheivments,
     Particapants: participants,
-    Images: m.Images,
   }
+  json.Unmarshal(eventJson,&event)
+
+  return event
+  
+
 }
+
+
+
+

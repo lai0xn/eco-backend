@@ -12,7 +12,8 @@ import (
 )
 
 var JWT_SECRET string
-
+var EMAIL string
+var EMAIL_PASSWORD string
 func Load() {
 	// OAuth configuration
 	godotenv.Load()
@@ -40,6 +41,8 @@ func Load() {
 
 	// JWT Secret
 	JWT_SECRET = os.Getenv("JWT_SECRET")
+  EMAIL = os.Getenv("EMAIL")
+  EMAIL_PASSWORD = os.Getenv("EMAIL_PASSWORD")
 
 	// Initialize the logger
 	logger.NewLogger()
