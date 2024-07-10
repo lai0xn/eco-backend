@@ -25,7 +25,7 @@ func (s *OrgService) GetOrg(id string) (*db.OrganizationModel, error) {
 
 	user, err := prisma.Client.Organization.FindUnique(
 		db.Organization.ID.Equals(id),
-	).With(db.Organization.Owner.Fetch()).Exec(ctx)
+	).With(db.Organization.Owner.Fetch(),db.Organization.Followers.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (s *OrgService) GetUserOrgs(id string) ([]db.OrganizationModel, error) {
 	}).Msg("DB Query")
 	user, err := prisma.Client.Organization.FindMany(
 		db.Organization.OwnerID.Equals(id),
-	).Exec(ctx)
+	).With(db.Organization.Followers.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -138,6 +138,39 @@ func (s *OrgService) DeleteOrg(id string) (string, error) {
 	deleted, err := prisma.Client.Organization.FindUnique(
 		db.Organization.ID.Equals(id),
 	).Delete().Exec(ctx)
+	if err != nil {
+		return "", nil
+	}
+	fmt.Println(deleted.ID)
+	return deleted.ID, nil
+}
+
+func (s *OrgService) Follow(userID string,orgId string) (string, error) {
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "follow org",
+
+	}).Msg("DB Query")
+	ctx := context.Background()
+	deleted, err := prisma.Client.Organization.FindUnique(
+		db.Organization.ID.Equals(orgId),
+	).Update(db.Organization.Followers.Link(db.User.ID.Equals(userID))).Exec(ctx)
+	if err != nil {
+		return "", nil
+	}
+	fmt.Println(deleted.ID)
+	return deleted.ID, nil
+}
+
+
+func (s *OrgService) Unfollow(userID string,orgId string) (string, error) {
+	logger.LogInfo().Fields(map[string]interface{}{
+		"query":  "follow org",
+
+	}).Msg("DB Query")
+	ctx := context.Background()
+	deleted, err := prisma.Client.Organization.FindUnique(
+		db.Organization.ID.Equals(orgId),
+	).Update(db.Organization.Followers.Unlink(db.User.ID.Equals(userID))).Exec(ctx)
 	if err != nil {
 		return "", nil
 	}

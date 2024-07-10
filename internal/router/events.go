@@ -11,7 +11,7 @@ func eventRoutes(e *echo.Group) {
   h:= handlers.NewEventHandler()
 	events.Use(jwtMiddelware)
   events.GET("",h.Get)
-  events.GET("/event/event/get/:id",h.Get)
+  events.GET("/event/get/:id",h.Get)
   events.GET("/event/acheivment/get/:id",h.GetAcheivment)
   events.POST("/event/acheivment/create",h.CreateAcheivment)
   events.GET("/event/event/search",h.Search)
