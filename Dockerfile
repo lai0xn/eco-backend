@@ -20,7 +20,7 @@ RUN go build ./cmd/server
  
 # Tells Docker which network port your container listens on
 EXPOSE 8080
-
+EXPOSE 5000
 
 
 RUN chmod a+x ./server

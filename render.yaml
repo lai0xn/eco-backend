@@ -1,13 +1,13 @@
-services:
-  - type: web
-    name: squid-tech-backend
-    runtime: docker
-    plan: free
-    envVars:
-      - fromGroup: squid-tech-settings
-
-  - type: redis
-    name: lightning
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: everywhere
+  services:
+    - type: web
+      name: squid-tech-backend
+      runtime: docker
+      plan: free
+      envVars:
+        - fromGroup: squid-tech-settings
+      
+    - type: redis
+      name: lightning
+      ipAllowList:
+        - source: 0.0.0.0/0
+          description: everywhere
