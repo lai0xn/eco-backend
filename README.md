@@ -131,7 +131,6 @@ Check the docs at /swagger/index.html
 you can use the playground at the route /graphql
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-## DB Schema
 
 <div id="graphql">
     <img src="https://i.imgur.com/BCaZA8H.png"alt="Logo">
