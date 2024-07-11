@@ -54,7 +54,7 @@
     </li>
     <li><a href="#docs">Documentation</a></li>
     <li><a href="#graphql">Graphql</a></li>
-    <li><a href="#schema">DB Diagram</a></li>
+    <li><a href="#db">DB Diagram</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
   </ol>
 </details>
@@ -138,6 +138,11 @@ you can use the playground at the route /graphql
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## DB Diagram
+
+<div id="db">
+    <img src="https://i.imgur.com/VJbswBg.jpeg">
+</div>
 
 
 <!-- ROADMAP -->
@@ -152,7 +157,7 @@ you can use the playground at the route /graphql
 - [x] Event Applications
 - [x] Organizations
 - [x] Achievments and Badges
-- [x] Notifications
+- [x] Notifications with SSE
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
