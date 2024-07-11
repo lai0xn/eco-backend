@@ -15,14 +15,14 @@ import (
 )
 
 type orgHandler struct {
-	srv *services.OrgService
-  usrv *services.ProfileService
+	srv  *services.OrgService
+	usrv *services.ProfileService
 }
 
 func NewOrgHandler() *orgHandler {
 	return &orgHandler{
-		srv: services.NewOrgService(),
-    usrv:services.NewProfileService(),
+		srv:  services.NewOrgService(),
+		usrv: services.NewProfileService(),
 	}
 }
 
@@ -67,35 +67,35 @@ func (h *orgHandler) Get(c echo.Context) error {
 // @Router		/organizations/org/follow/:id [get]
 func (h *orgHandler) FollowHandler(c echo.Context) error {
 	id := c.Param("id")
-  u := c.Get("user").(*jwt.Token)
-  claims := u.Claims.(*types.Claims)
-  user,err := h.usrv.GetUser(claims.ID)
+	u := c.Get("user").(*jwt.Token)
+	claims := u.Claims.(*types.Claims)
+	user, err := h.usrv.GetUser(claims.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-  var follower bool = false
-  for _,orgID:= range user.FollowingIds{
-    if orgID == id{
-      follower = true
-    }
-  }
-  if follower == true {
-    res,err := h.srv.Unfollow(claims.ID,id)
-    if err != nil {
-      return c.JSON(http.StatusBadRequest,err)
-    }
-    return c.JSON(http.StatusOK,types.Response{
-      "message":"unfollowed org :" + res, 
-    })
-  }else {
-    res,err := h.srv.Follow(claims.ID,id)
-    if err != nil {
-      return c.JSON(http.StatusBadRequest,err)
-    }
-    return c.JSON(http.StatusOK,types.Response{
-      "message":"followed org" + res,
-    })
-  }
+	var follower bool = false
+	for _, orgID := range user.FollowingIds {
+		if orgID == id {
+			follower = true
+		}
+	}
+	if follower == true {
+		res, err := h.srv.Unfollow(claims.ID, id)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+		return c.JSON(http.StatusOK, types.Response{
+			"message": "unfollowed org :" + res,
+		})
+	} else {
+		res, err := h.srv.Follow(claims.ID, id)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+		return c.JSON(http.StatusOK, types.Response{
+			"message": "followed org" + res,
+		})
+	}
 
 }
 

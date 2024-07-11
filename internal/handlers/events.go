@@ -18,16 +18,17 @@ import (
 
 func NewEventHandler() *eventHandler {
 	return &eventHandler{
-		srv: services.NewEventsService(),
-    osrv : services.NewOrgService(),
+		srv:  services.NewEventsService(),
+		osrv: services.NewOrgService(),
 	}
 }
 
 type eventHandler struct {
-  srv *services.EventsService
-  osrv *services.OrgService
+	srv  *services.EventsService
+	osrv *services.OrgService
 }
-func (h *eventHandler)hasPerm(c echo.Context) (*db.EventModel, error) {
+
+func (h *eventHandler) hasPerm(c echo.Context) (*db.EventModel, error) {
 	id := c.Param("id")
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*types.Claims)
@@ -35,17 +36,16 @@ func (h *eventHandler)hasPerm(c echo.Context) (*db.EventModel, error) {
 	if err != nil {
 		return nil, echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-  org,err := h.osrv.GetOrg(event.OrganizerID)
-  if err != nil {
-    return nil,echo.NewHTTPError(http.StatusBadGateway,err)
-  }
+	org, err := h.osrv.GetOrg(event.OrganizerID)
+	if err != nil {
+		return nil, echo.NewHTTPError(http.StatusBadGateway, err)
+	}
 	if org.OwnerID != claims.ID {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "you dont have the perms to perform this actin")
 	}
 	return event, nil
 
 }
-
 
 // @Summary	Get event endpoint
 // @Tags		events
@@ -61,7 +61,7 @@ func (h *eventHandler) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK,org)
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Get acheivment endpoint
@@ -78,7 +78,7 @@ func (h *eventHandler) GetAcheivment(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK,org)
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Get Post endpoint
@@ -89,22 +89,22 @@ func (h *eventHandler) GetAcheivment(c echo.Context) error {
 // @Success	200
 // @Router		/events [get]
 func (h *eventHandler) GetPage(c echo.Context) error {
-  var p int
-  page := c.QueryParam("page")
-  if page == "" {
-    p = 1
-  }
-  p,err := strconv.Atoi(page)
-  if err != nil {
-     	return echo.NewHTTPError(http.StatusBadRequest, err)
-  }
+	var p int
+	page := c.QueryParam("page")
+	if page == "" {
+		p = 1
+	}
+	p, err := strconv.Atoi(page)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
 	org, err := h.srv.GetEvents(p)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK,org)
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Search event endpoint
@@ -126,14 +126,12 @@ func (h *eventHandler) Search(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-
-
 // @Summary	create event endpoint
 // @Tags		events
 // @Accept		json
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
-// @Param		body	body	types.EventPayload	false "body"	
+// @Param		body	body	types.EventPayload	false "body"
 // @Success	200
 // @Router		/events/create [post]
 func (h *eventHandler) Create(c echo.Context) error {
@@ -145,15 +143,15 @@ func (h *eventHandler) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-  org,err := h.osrv.GetOrg(payload.OrgID)
-  if err != nil {
-    	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	org, err := h.osrv.GetOrg(payload.OrgID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
-  }
-  if org.OwnerID != claims.ID {
-    	return echo.NewHTTPError(http.StatusBadRequest, errors.New("no perms to perform this action"))
-  }
-  result, err := h.srv.CreateEvent(payload)
+	}
+	if org.OwnerID != claims.ID {
+		return echo.NewHTTPError(http.StatusBadRequest, errors.New("no perms to perform this action"))
+	}
+	result, err := h.srv.CreateEvent(payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
@@ -166,7 +164,7 @@ func (h *eventHandler) Create(c echo.Context) error {
 // @Accept		json
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
-// @Param		body	body	types.AcheivmentPayload	false "body"	
+// @Param		body	body	types.AcheivmentPayload	false "body"
 // @Success	200
 // @Router		/events/acheivment/create [post]
 func (h *eventHandler) CreateAcheivment(c echo.Context) error {
@@ -178,22 +176,21 @@ func (h *eventHandler) CreateAcheivment(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-  org,err := h.osrv.GetOrg(payload.OrgID)
-  if err != nil {
-    	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	org, err := h.osrv.GetOrg(payload.OrgID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
-  }
-  if org.OwnerID != claims.ID {
-    	return echo.NewHTTPError(http.StatusBadRequest, errors.New("no perms to perform this action"))
-  }
-  result, err := h.srv.CreateAcheivment(payload,org.ID)
+	}
+	if org.OwnerID != claims.ID {
+		return echo.NewHTTPError(http.StatusBadRequest, errors.New("no perms to perform this action"))
+	}
+	result, err := h.srv.CreateAcheivment(payload, org.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
 	return c.JSON(http.StatusOK, result)
 }
-
 
 // @Summary	Add Event Image endpoint
 // @Tags		events
@@ -210,9 +207,9 @@ func (h *eventHandler) AddImage(c echo.Context) error {
 	}
 	file, err := c.FormFile("file")
 
-  if err != nil {
-    return echo.NewHTTPError(http.StatusBadRequest,err)
-  }
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
 
 	path := fmt.Sprintf("public/uploads/events/%s", filepath.Clean(file.Filename))
 	f, err := os.Create(path)
@@ -230,7 +227,6 @@ func (h *eventHandler) AddImage(c echo.Context) error {
 	})
 }
 
-
 // @Summary	Delete acheivment endpoint
 // @Tags		organizations
 // @Accept		json
@@ -239,19 +235,19 @@ func (h *eventHandler) AddImage(c echo.Context) error {
 // @Success	200
 // @Router		/events/acheivment/delete/:id [delete]
 func (h *eventHandler) DeleteAcheivment(c echo.Context) error {
-  id := c.Param("id")
-  u := c.Get("user").(*jwt.Token)
-  claims := u.Claims.(*types.Claims)
-  acheivment,err := h.srv.GetAcheivment(id)
-  if err != nil {
-     return echo.NewHTTPError(http.StatusBadRequest,err)
-  }
-  if acheivment.OrgID != claims.ID {
-    return echo.NewHTTPError(http.StatusUnauthorized,errors.New("no authorized to do this action"))
-  }
+	id := c.Param("id")
+	u := c.Get("user").(*jwt.Token)
+	claims := u.Claims.(*types.Claims)
+	acheivment, err := h.srv.GetAcheivment(id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	if acheivment.OrgID != claims.ID {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("no authorized to do this action"))
+	}
 
 	deleted_id, err := h.srv.DeleteAcheivment(id)
-  if err != nil {
+	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, deleted_id)

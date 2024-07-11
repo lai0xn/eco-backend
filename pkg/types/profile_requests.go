@@ -6,6 +6,5 @@ type ProfileUpdate struct {
 	Bio    string `json:"bio"`
 	Adress string `json:"adress"`
 	Phone  string `json:"phone"`
-  Links string   `json:"links"`
-  
+	Links  string `json:"links"`
 }

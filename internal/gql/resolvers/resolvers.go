@@ -1,7 +1,6 @@
 package resolvers
 
-
 var (
-  EventResolver = NewEventResolver()
-  AppResolver = NewAppResolver()
+	EventResolver = NewEventResolver()
+	AppResolver   = NewAppResolver()
 )

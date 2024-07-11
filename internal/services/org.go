@@ -26,7 +26,7 @@ func (s *OrgService) GetOrg(id string) (*db.OrganizationModel, error) {
 
 	user, err := prisma.Client.Organization.FindUnique(
 		db.Organization.ID.Equals(id),
-	).With(db.Organization.Owner.Fetch(),db.Organization.Followers.Fetch()).Exec(ctx)
+	).With(db.Organization.Owner.Fetch(), db.Organization.Followers.Fetch()).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (s *OrgService) UpdateOrg(id string, payload types.OrgPayload) (*db.Organiz
 	).Update(
 		db.Organization.Name.Set(payload.Name),
 		db.Organization.Description.Set(payload.Description),
-			).Exec(ctx)
+	).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -146,10 +146,9 @@ func (s *OrgService) DeleteOrg(id string) (string, error) {
 	return deleted.ID, nil
 }
 
-func (s *OrgService) Follow(userID string,orgId string) (string, error) {
+func (s *OrgService) Follow(userID string, orgId string) (string, error) {
 	logger.LogInfo().Fields(map[string]interface{}{
-		"query":  "follow org",
-
+		"query": "follow org",
 	}).Msg("DB Query")
 	ctx := context.Background()
 	org, err := prisma.Client.Organization.FindUnique(
@@ -158,18 +157,16 @@ func (s *OrgService) Follow(userID string,orgId string) (string, error) {
 	if err != nil {
 		return "", nil
 	}
-  client := redis.GetClient()
-  key := fmt.Sprintf("notifs:%s",org.OwnerID)
-  client.Publish(context.Background(),key,fmt.Sprintf("Your org %s gained a new follower",org.Name))
+	client := redis.GetClient()
+	key := fmt.Sprintf("notifs:%s", org.OwnerID)
+	client.Publish(context.Background(), key, fmt.Sprintf("Your org %s gained a new follower", org.Name))
 	return org.ID, nil
-  
+
 }
 
-
-func (s *OrgService) Unfollow(userID string,orgId string) (string, error) {
+func (s *OrgService) Unfollow(userID string, orgId string) (string, error) {
 	logger.LogInfo().Fields(map[string]interface{}{
-		"query":  "follow org",
-
+		"query": "follow org",
 	}).Msg("DB Query")
 	ctx := context.Background()
 	deleted, err := prisma.Client.Organization.FindUnique(

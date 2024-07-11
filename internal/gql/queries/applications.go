@@ -6,13 +6,12 @@ import (
 	"github.com/lai0xn/squid-tech/internal/gql/types"
 )
 
-
 var applicationsQuery = &graphql.Field{
-  Type: types.ApplicationType,
-  Args: graphql.FieldConfigArgument{
-    "id":&graphql.ArgumentConfig{
-      Type: graphql.String,
-    },
-  },
-  Resolve: resolvers.AppResolver.App,
+	Type: types.ApplicationType,
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
+	},
+	Resolve: resolvers.AppResolver.App,
 }

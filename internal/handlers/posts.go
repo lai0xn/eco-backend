@@ -54,7 +54,7 @@ func (h *PostsHandler) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK,org)
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Get Post endpoint
@@ -65,22 +65,22 @@ func (h *PostsHandler) Get(c echo.Context) error {
 // @Success	200
 // @Router		/posts [get]
 func (h *PostsHandler) GetPage(c echo.Context) error {
-  var p int
-  page := c.QueryParam("page")
-  if page == "" {
-    p = 1
-  }
-  p,err := strconv.Atoi(page)
-  if err != nil {
-     	return echo.NewHTTPError(http.StatusBadRequest, err)
-  }
+	var p int
+	page := c.QueryParam("page")
+	if page == "" {
+		p = 1
+	}
+	p, err := strconv.Atoi(page)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
 	org, err := h.srv.GetPosts(p)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK,org)
+	return c.JSON(http.StatusOK, org)
 }
 
 // @Summary	Search Post endpoint
@@ -135,7 +135,6 @@ func (h *PostsHandler) UploadImage(c echo.Context) error {
 	})
 }
 
-
 // @Summary	Update Post endpoint
 // @Tags		posts
 // @Accept		json
@@ -152,7 +151,7 @@ func (h *PostsHandler) Update(c echo.Context) error {
 	}
 
 	var payload = types.PostPayload{
-		Content:        post.Content,
+		Content:     post.Content,
 		Description: post.Description,
 	}
 	err = c.Bind(&payload)
@@ -169,8 +168,6 @@ func (h *PostsHandler) Update(c echo.Context) error {
 		"org": payload,
 	})
 }
-
-
 
 // @Summary	Delete Post endpoint
 // @Tags		posts
@@ -197,7 +194,7 @@ func (h *PostsHandler) Delete(c echo.Context) error {
 // @Accept		json
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
-// @Param		body	body	types.PostPayload	false "body"	
+// @Param		body	body	types.PostPayload	false "body"
 // @Success	200
 // @Router		/posts/create [post]
 func (h *PostsHandler) Create(c echo.Context) error {
@@ -209,7 +206,7 @@ func (h *PostsHandler) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	_, err = h.srv.CreatePost(claims.ID, payload.Content,payload.Description)
+	_, err = h.srv.CreatePost(claims.ID, payload.Content, payload.Description)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
@@ -219,14 +216,12 @@ func (h *PostsHandler) Create(c echo.Context) error {
 	})
 }
 
-
-
 // @Summary	comment post endpoint
 // @Tags		posts
 // @Accept		json
 // @Produce	json
 // @Param		Authorization	header	string	true	"Bearer token"
-// @Param		body	body	types.CommentPayload	false "body"	
+// @Param		body	body	types.CommentPayload	false "body"
 // @Success	200
 // @Router		/posts/comment [post]
 func (h *PostsHandler) Comment(c echo.Context) error {
@@ -238,7 +233,7 @@ func (h *PostsHandler) Comment(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	_, err = h.srv.CreateComment(claims.ID, payload.PostID,payload.Content)
+	_, err = h.srv.CreateComment(claims.ID, payload.PostID, payload.Content)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
@@ -247,7 +242,6 @@ func (h *PostsHandler) Comment(c echo.Context) error {
 		"org": payload,
 	})
 }
-
 
 // @Summary	delete comment endpoint
 // @Tags		posts
@@ -266,7 +260,7 @@ func (h *PostsHandler) DeleteComment(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
 	}
-	_, err = h.srv.CreateComment(claims.ID, payload.PostID,payload.Content)
+	_, err = h.srv.CreateComment(claims.ID, payload.PostID, payload.Content)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
@@ -275,4 +269,3 @@ func (h *PostsHandler) DeleteComment(c echo.Context) error {
 		"org": payload,
 	})
 }
-

@@ -12,14 +12,14 @@ import (
 )
 
 type authHandler struct {
-	srv *services.AuthService
-  verifier *mail.EmailVerifier
+	srv      *services.AuthService
+	verifier *mail.EmailVerifier
 }
 
 func NewAuthHandler() *authHandler {
 	return &authHandler{
-		srv: services.NewAuthService(),
-    verifier: mail.NewVerifier(),
+		srv:      services.NewAuthService(),
+		verifier: mail.NewVerifier(),
 	}
 }
 
@@ -74,22 +74,19 @@ func (h *authHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, utils.NewValidationError(e))
 	}
 	//TODO: fix gender
-	user,err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, payload.Gender)
-  if err != nil {
+	user, err := h.srv.CreateUser(payload.Name, payload.Email, payload.Password, payload.Gender)
+	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-  err = h.verifier.SendVerfication(user.ID,[]string{user.Email})
-  if err != nil {
-    return echo.NewHTTPError(http.StatusBadRequest,err)
-  }
-	return c.JSON(http.StatusOK,types.Response{
-    "message":"verification email sent",
-    "userID":user.ID,
-  })
+	err = h.verifier.SendVerfication(user.ID, []string{user.Email})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, types.Response{
+		"message": "verification email sent",
+		"userID":  user.ID,
+	})
 }
-
-
-
 
 // Email verification example
 //
@@ -101,15 +98,15 @@ func (h *authHandler) Register(c echo.Context) error {
 //	@Param		otp		query		string	true	"otp"
 //	@Router		/auth/verify [post]
 func (h *authHandler) VerifyUser(c echo.Context) error {
-  id := c.QueryParam("id")
-  otp := c.QueryParam("otp")
-  if err := h.verifier.Verify(id,otp);err!= nil {
-    return echo.NewHTTPError(http.StatusBadRequest,err)
-  }
-  if err := h.srv.ActivateUser(id);err!=nil{
-     return echo.NewHTTPError(http.StatusBadRequest,err)
-  }
-	return c.JSON(http.StatusOK,types.Response{
-    "message":"user activated",
-  })
+	id := c.QueryParam("id")
+	otp := c.QueryParam("otp")
+	if err := h.verifier.Verify(id, otp); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	if err := h.srv.ActivateUser(id); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, types.Response{
+		"message": "user activated",
+	})
 }

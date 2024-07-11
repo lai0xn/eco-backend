@@ -40,4 +40,3 @@ func HeaderMiddleware(next http.Handler) http.HandlerFunc {
 	})
 
 }
-

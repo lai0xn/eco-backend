@@ -18,7 +18,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a>
     <img src="https://svgshare.com/i/187k.svg"alt="Logo" width="80" height="80">
   </a>
 
@@ -52,6 +52,8 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#docs">Documentation</a></li>
+    <li><a href="#graphql">Graphql</a></li>
     <li><a href="#schema">DB Diagram</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
   </ol>
@@ -117,13 +119,22 @@ you need to have go installed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Documentation
+Check the docs at /swagger/index.html
 
+<div id="docs">
+    <img src="https://i.imgur.com/akLv58e.png"alt="Logo" >
+</div>
 
 <!-- USAGE EXAMPLES -->
+## GraphQl
+you can use the playground at the route /graphql
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 ## DB Schema
 
-<div id="schema">
-    <img src="https://i.imgur.com/hc50TNw.jpeg"alt="Logo" width="1000" height="1000">
+<div id="graphql">
+    <img src="https://i.imgur.com/BCaZA8H.png"alt="Logo">
   </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -160,7 +171,7 @@ you need to have go installed
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: https://i.imgur.com/akLv58e.png
+[product-screenshot]: https://i.imgur.com/Bd51sZB.png
 [Golang]:https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white
 [Golang-url]: https://go.dev/
 [Echo]: https://img.shields.io/badge/echo-35495E?style=for-the-badge&logo=gin&logoColor=white
@@ -177,3 +188,4 @@ you need to have go installed
 [Nginx-url]: https://nginx.org/ 
 [MongoDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
 [MongoDB-url]: https://mongodb.com/
+

@@ -142,11 +142,11 @@ func (h *profileHandler) Update(c echo.Context) error {
 	if !ok {
 		adress = ""
 	}
-  links, ok := u.ExternalLinks()
+	links, ok := u.ExternalLinks()
 	if !ok {
 		adress = ""
 	}
-  phone, ok := u.Phone()
+	phone, ok := u.Phone()
 	if !ok {
 		adress = ""
 	}
@@ -156,7 +156,7 @@ func (h *profileHandler) Update(c echo.Context) error {
 		Bio:    u.Bio,
 		Phone:  phone,
 		Adress: adress,
-    Links: links,
+		Links:  links,
 	}
 	err = c.Bind(&payload)
 	if err != nil {
@@ -164,7 +164,7 @@ func (h *profileHandler) Update(c echo.Context) error {
 
 	}
 	fmt.Println(payload)
-  updated, err := h.srv.UpdateUser(claims.ID, payload)
+	updated, err := h.srv.UpdateUser(claims.ID, payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 
@@ -183,10 +183,9 @@ func (h *profileHandler) CurrentUser(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*types.Claims)
 	u, err := h.srv.GetUser(claims.ID)
-  if err != nil {
+	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
 
 	return c.JSON(http.StatusOK, u)
 }

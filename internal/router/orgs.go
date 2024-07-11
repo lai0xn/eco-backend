@@ -13,7 +13,7 @@ func orgsRoutes(e *echo.Group) {
 	g.GET("/me", h.MyOrgs)
 	g.GET("/org/search", h.Search)
 	g.POST("/create", h.Create)
-  g.POST("/org/follow/:id", h.FollowHandler)
+	g.POST("/org/follow/:id", h.FollowHandler)
 	g.PATCH("/org/:id/pfp", h.ChangePfp)
 	g.PATCH("/org/:id/bg", h.ChangeBg)
 	g.PATCH("/org/update/:id", h.Update)

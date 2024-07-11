@@ -40,7 +40,7 @@ func (s *Server) Setup(e *echo.Echo) {
 func (s *Server) Run() {
 	e := echo.New()
 	s.Setup(e)
-  gql.Execute(e)
-	logger.LogInfo().Msg("graphql server running on port 5000")
+	gql.Execute(e)
+	logger.LogInfo().Msg("graphql server running on /graphql")
 	logger.LogInfo().Msg(e.Start(s.PORT).Error())
 }

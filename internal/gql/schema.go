@@ -8,5 +8,5 @@ import (
 
 var Schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Query:    queries.RootQuery,
-  Mutation: mutations.RootMutation,
+	Mutation: mutations.RootMutation,
 })
