@@ -123,7 +123,7 @@ you need to have go installed
 ## DB Schema
 
 <div id="schema">
-    <img src="https://i.imgur.com/q5Yoov5.png"alt="Logo" width="1000" height="1000">
+    <img src="https://i.imgur.com/hc50TNw.jpeg"alt="Logo" width="1000" height="1000">
   </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -168,12 +168,12 @@ you need to have go installed
 [Prisma]: https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white
 [Prisma-url]: https://prisma.io
 [GraphQl]: https://img.shields.io/badge/-GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white
-[GraphQl-url]: https://GraphQl/
+[GraphQl-url]: https://graphql.org/
 [Redis]: https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white
-[Redis-url]: https://Redis/
+[Redis-url]: https://redis.io/
 [Docker]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
-[Docker-url]: https://Docker
+[Docker-url]: https://docker.com
 [Nginx]: https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white
-[Nginx-url]: https://getNginx
+[Nginx-url]: https://nginx.org/ 
 [MongoDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
-[MongoDB-url]: https://MongoDB 
+[MongoDB-url]: https://mongodb.co/
