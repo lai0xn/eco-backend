@@ -93,8 +93,8 @@ the backend part of the squid-tech hackathon project
 ### Prerequisites
 you need to have go installed
 
-### Installation
-
+# Installation
+## Normal Setup
 1. Clone the repo 
 
     ```sh
@@ -116,10 +116,16 @@ you need to have go installed
    ```sh
    go run cmd/server/main.go
    ```
+## Using Docker
+```sh
+docker-compose build app
+docker-compose build web
+docker-compose up web -d
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Documentation
+# Documentation
 Check the docs at /swagger/index.html
 
 <div id="docs">
@@ -127,7 +133,7 @@ Check the docs at /swagger/index.html
 </div>
 
 <!-- USAGE EXAMPLES -->
-## GraphQl
+# GraphQl
 you can use the playground at the route /graphql
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -138,7 +144,7 @@ you can use the playground at the route /graphql
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## DB Diagram
+# DB Diagram
 
 <div id="db">
     <img src="https://i.imgur.com/VJbswBg.jpeg">
@@ -146,7 +152,7 @@ you can use the playground at the route /graphql
 
 
 <!-- ROADMAP -->
-## Roadmap
+# Roadmap
 
 - [x] Jwt Auth
 - [x] Google And Facebook Oath
