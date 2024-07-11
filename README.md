@@ -66,7 +66,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](http://echobackend.laindev.me/swagger/index.html)
 
-the backend part of the squid-tech hackathon project this is a screenshot of the docs
+the backend part of the squid-tech hackathon project
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
