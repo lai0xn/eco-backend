@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/lai0xn/squid-tech/internal/services"
+	"github.com/lai0xn/squid-tech/pkg/logger"
 	"github.com/lai0xn/squid-tech/pkg/types"
 	"github.com/lai0xn/squid-tech/pkg/utils"
 	"golang.org/x/oauth2"
@@ -94,9 +96,9 @@ func (h *oauthHandler) handleCallback(c echo.Context, provider string) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to generate token: "+err.Error())
 	}
 
-	return c.JSON(http.StatusOK, types.Response{
-		"token": tokenString,
-	})
+	redirectURL := os.Getenv("HOST_URL") + "/login?token=" + tokenString
+	logger.Logger.Info().Msgf("Redirecting to %s", redirectURL)
+	return c.Redirect(http.StatusFound, redirectURL)
 }
 
 // handleLogin handles the redirect to Google's OAuth2 login page.
