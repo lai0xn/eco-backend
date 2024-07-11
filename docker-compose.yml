@@ -1,0 +1,15 @@
+version: '1'
+services:
+  web:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
